@@ -8,13 +8,24 @@ using System.Threading.Tasks;
 
 namespace Melody.NoteDetector
 {
+    // Represents type of metric, by what distance to note executing 
+
     class SimpleDetector
     {
         /*
          * Returns most-powerfull frequency in signal
          * Spectrum must be calculated by FFT
          **/
-        public double DetectNote(Complex[] spectrum, double duration)
+        public Tuple<double, Note> DetectNote(Complex[] spectrum, double duration)
+        {
+            var hz = CalcHz(spectrum, duration);
+            var conv = new NoteConverter(new NoteMeasurer(DetectionMetric.Scalar));
+            var note = conv.Convert((float)hz);
+
+            return new Tuple<double, Note>(hz, note);
+        }
+
+        private double CalcHz(Complex[] spectrum, double duration)
         {
             var max = 0d;
             var maxFreq = 0d;

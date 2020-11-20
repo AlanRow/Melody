@@ -30,6 +30,7 @@ namespace Melody
         private SimpleSignal signal;
         //private double duration;
         private double hz;
+        private string note;
 
         private void ReadFile(string path)
         {
@@ -56,7 +57,9 @@ namespace Melody
         private void DetectHZ()
         {
             var spec = spectrum.Specs[0].Spectrum.Select(fp => fp.Coords).ToArray();
-            hz = new SimpleDetector().DetectNote(spec, signal.GetDurationInSeconds());
+            var result = new SimpleDetector().DetectNote(spec, signal.GetDurationInSeconds());
+            hz = result.Item1;
+            note = result.Item2.ToString();
         }
 
         private void AnalyzeFile(string path)
@@ -84,7 +87,7 @@ namespace Melody
                     /*try
                     {*/
                         AnalyzeFile(path);
-                        MessageBox.Show(String.Format("Actual frequency is {0}HZ", hz));
+                        MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", hz, note));
                     /*}
                     catch (Exception ex)
                     {

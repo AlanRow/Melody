@@ -57,6 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="FileScaner\WAWFile.cs" />
+    <Compile Include="NoteDetector\NoteConverter.cs" />
     <Compile Include="NoteDetector\SimpleDetector.cs" />
     <Compile Include="SpectrumAnalyzer\Analyzer.cs" />
     <Compile Include="SpectrumAnalyzer\FFTTransformer.cs" />
