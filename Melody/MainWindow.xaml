@@ -9,28 +9,39 @@
         Height="450" 
         Width="800"
         Background="Bisque">
+    <Window.Resources>
+        <Style TargetType="Button"
+               x:Key="MainButton">
+            <Setter Property="Padding" Value="10 10 10 10" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Background" Value="Gray" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style TargetType="Label"
+               x:Key="LogoTitle">
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
         <Grid 
             Grid.Row="0"
             Background="Black">
-            <Label
-                FontSize="18"
-                Foreground="White">
+            <Label Style="{StaticResource LogoTitle}">
                 Melody
             </Label>
         </Grid>
         <Grid Grid.Row="1">
 
             <Button
-                Padding="10 10 10 10"
-                FontSize="20"
-                Background="Gray"
-                Foreground="White"
+                Style="{StaticResource MainButton}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Content="Open File"
