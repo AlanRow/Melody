@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Melody.FileScaner.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -59,10 +60,19 @@ namespace FileScaner
             return (double)(SamplesCount) / ((double)Sampling);
         }
 
+        /// <exception cref="FileScaner.Exceptions.FileReadingException">Reading error</exception>
+        /// <exception cref="FileScaner.Exceptions.FileCompressedException">File data is compressed</exception>
+        /// <exception cref="System.FormatException">Bad file format</exception>
         public WAVFile(string path)
         {
-            var bytes = File.ReadAllBytes(path);
-
+            var bytes = new byte[0];
+            try
+            {
+                bytes = File.ReadAllBytes(path);
+            } catch (Exception ex)
+            {
+                throw new FileReadingException(ex.Message);
+            }
             // check file valid
 
             ReadAndCheck(bytes, FORMAT, 0, 4);
@@ -74,17 +84,23 @@ namespace FileScaner
             // Parameters init
             Length = bytes.Length - 8;
 
-            if (ReadNumberBE(bytes, 20, 2) == NOTCOMPRESSING)
-                compressed = false;
-            else
-                throw new FormatException("File has compressed! This programm doesn't work with compressed files");
+            try
+            {
+                if (ReadNumberBE(bytes, 20, 2) == NOTCOMPRESSING)
+                    compressed = false;
+                else
+                    throw new FileCompressedException("File has compressed! This programm doesn't work with compressed files");
 
-            Channels = (int) ReadNumberBE(bytes, 22, 2);
-            Sampling = (int) ReadNumberBE(bytes, 24, 4);
+                Channels = (int)ReadNumberBE(bytes, 22, 2);
+                Sampling = (int)ReadNumberBE(bytes, 24, 4);
 
-            // miss the bytes on second and bytes in sample, so its calculatable values
+                // miss the bytes on second and bytes in sample, so its calculatable values
 
-            Depth = (int)ReadNumberBE(bytes, 34, 2);
+                Depth = (int)ReadNumberBE(bytes, 34, 2);
+            } catch (ArgumentException ex)
+            {
+                throw new FormatException(ex.Message);
+            } 
 
             var byteInSample = Channels * Depth / 8;
             ReadAndCheck(bytes, byteInSample, 32, 2);
@@ -105,19 +121,35 @@ namespace FileScaner
             	ReadAndCheck(bytes, DATA, dataIdx, 4);
             }
 
-            var dataLen = (int)ReadNumberBE(bytes, dataIdx + 4, 4);
+            int dataLen;
+            try
+            {
+                dataLen = (int)ReadNumberBE(bytes, dataIdx + 4, 4);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new FormatException(ex.Message);
+            }
+
             var dataStart = dataIdx + 8;
 
             SamplesCount = dataLen / (byteInSample);
 
             sound = new int[Channels, SamplesCount];
 
-            for (var i = 0; i < sound.GetLength(1); i++)
+            try
             {
-                for (var j = 0; j < Channels; j++)
+                for (var i = 0; i < sound.GetLength(1); i++)
                 {
-                    sound[j, i] = (int) ReadNumberLE(bytes, dataStart + i * byteInSample + j * Depth / 8, Depth / 8);
+                    for (var j = 0; j < Channels; j++)
+                    {
+                        sound[j, i] = (int)ReadNumberLE(bytes, dataStart + i * byteInSample + j * Depth / 8, Depth / 8);
+                    }
                 }
+            }
+            catch (ArgumentException ex)
+            {
+                throw new FormatException(ex.Message);
             }
         }
 
@@ -144,7 +176,14 @@ namespace FileScaner
 
         private static void ReadAndCheck(byte[] file, int exp, int start, int len)
         {
-            var num = ReadNumberBE(file, start, len);
+            long num;
+            try
+            {
+                num = ReadNumberBE(file, start, len);
+            } catch (ArgumentException ex)
+            {
+                throw new FormatException(ex.Message);
+            }
             if (num != exp)
             {
                 throw new FormatException(String.Format("File have bad format on bytes {0}-{1}: must be {2}, but actually was {3}",
