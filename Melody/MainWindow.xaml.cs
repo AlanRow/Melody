@@ -48,7 +48,7 @@ namespace Melody
                         app.ReadFile(path);
                         app.TransformSignal();
                         app.GetNote();
-                        MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", app.Note.Hz, app.Note.Name));
+                        MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", (int)Math.Round(app.Note.Hz), app.Note.Name));
                     }
                     catch (AudioFileReadingException ex)
                     {
