@@ -8,6 +8,7 @@
  */
 using System;
 using System.Linq;
+using System.Numerics;
 
 namespace Melody.SpectrumAnalyzer
 {
@@ -22,19 +23,12 @@ namespace Melody.SpectrumAnalyzer
 		{
 			transformer = new FFTTransformer();
 		}
-		
-		public Spectrum GetSpectrum(ISignal signal)
+
+		public Complex[][] GetSpectrum(ISignal signal)
 		{
-			var specArr = transformer.Transform(signal.GetValues().ToArray());
-			var len = (double)specArr.Length;
-			var dur = signal.GetDurationInSeconds();
-			
-			
-			var points = specArr
-				.Select((val, idx) => new FreqPoint(val, len/idx * dur))
-				.ToArray();
-			
-			return new Spectrum(new SpectrumLine[] { new SpectrumLine(points, 0) });
+			return new Complex[][] {
+				transformer.Transform(signal.GetValues().ToArray())
+			};
 		}
 	}
 }
