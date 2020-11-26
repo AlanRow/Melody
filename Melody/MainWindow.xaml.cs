@@ -25,53 +25,12 @@ namespace Melody
     /// </summary>
     public partial class MainWindow : Window
     {
-        //private WAVFile file;
-        private Spectrum spectrum;
-        private SimpleSignal signal;
-        //private double duration;
-        private double hz;
-        private string note;
-
-        private void ReadFile(string path)
-        {
-            var file = new WAVFile(path);
-
-            var length = 1;
-            for (var i = 1; i <= file.SamplesCount; i*=2)
-                length = i;
-
-            var vals = file.GetChannel(0).Take(length).Select(i => (double)i).ToArray();
-            var duration = file.GetDuration() * length / file.SamplesCount;
-            signal = new SimpleSignal(vals, duration);
-        }
-
-        private void Transform()
-        {
-            if (signal == null)
-            {
-                throw new Exception("WAV file is not determined");
-            }
-            spectrum = new Analyzer().GetSpectrum(signal);
-        }
-
-        private void DetectHZ()
-        {
-            var spec = spectrum.Specs[0].Spectrum.Select(fp => fp.Coords).ToArray();
-            var result = new SimpleDetector().DetectNote(spec, signal.GetDurationInSeconds());
-            hz = result.Item1;
-            note = result.Item2.ToString();
-        }
-
-        private void AnalyzeFile(string path)
-        {
-            ReadFile(path);
-            Transform();
-            DetectHZ();
-        }
+        private AppController app;
 
         public MainWindow()
         {
             InitializeComponent();
+            app = new AppController();
         }
         private void OpenFileClick(object sender, RoutedEventArgs e)
         {
@@ -84,15 +43,21 @@ namespace Melody
 
                 if (ext == "wav")
                 {
-                    /*try
-                    {*/
-                        AnalyzeFile(path);
-                        MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", hz, note));
-                    /*}
+                    try
+                    {
+                        app.ReadFile(path);
+                        app.TransformSignal();
+                        app.GetNote();
+                        MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", app.Note.Hz, app.Note.Name));
+                    }
+                    catch (AudioFileReadingException ex)
+                    {
+                        MessageBox.Show(ex.Message, "File reading error");
+                    }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "File handling error");
-                    }*/
+                        MessageBox.Show(ex.Message, "Error");
+                    }
                 }
                 else
                 {

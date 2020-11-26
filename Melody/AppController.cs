@@ -12,7 +12,7 @@ namespace Melody
     {
         private ExtractedSound sound;
         private CalculatedSpectrum spectrum;
-        private NoteData note;
+        public NoteData Note { get; private set; }
 
         /// <exception cref="AudioFileReadingException">File reading error</exception>
         public void ReadFile(string path)
@@ -59,7 +59,7 @@ namespace Melody
             var detector = new NoteDetector.SimpleDetector();
             var notePair = detector.DetectNote(spectrum.Spectrum[0], spectrum.Duration);
 
-            note = new NoteData(notePair.Item2.ToString(), notePair.Item1);
+            Note = new NoteData(notePair.Item2.ToString(), notePair.Item1);
         }
     }
 }

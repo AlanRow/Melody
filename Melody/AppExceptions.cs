@@ -10,4 +10,14 @@ namespace Melody
     {
         public AudioFileReadingException(string message) : base(message) { }
     }
+    
+    class FileNotLoadedException : Exception
+    {
+        public FileNotLoadedException(string message) : base(message) { }
+    }
+
+    class SpectrumNotCalculatedException : Exception
+    {
+        public SpectrumNotCalculatedException(string message) : base(message) { }
+    }
 }
