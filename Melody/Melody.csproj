@@ -56,6 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppController.cs" />
+    <Compile Include="AppExceptions.cs" />
+    <Compile Include="FileScaner\FileScanerExceptions.cs" />
     <Compile Include="FileScaner\WAWFile.cs" />
     <Compile Include="NoteDetector\NoteConverter.cs" />
     <Compile Include="NoteDetector\SimpleDetector.cs" />
