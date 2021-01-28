@@ -1,6 +1,7 @@
 ﻿using FileScaner;
 using Melody.NoteDetector;
 using Melody.SpectrumAnalyzer;
+using Melody.Views;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,7 @@ namespace Melody
                         app.TransformSignal();
                         app.GetNote();
                         MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", (int)Math.Round(app.Note.Hz), app.Note.Name));
+
                     }
                     catch (AudioFileReadingException ex)
                     {
@@ -58,6 +60,11 @@ namespace Melody
                     {
                         MessageBox.Show(ex.Message, "Error");
                     }
+                    // Spectrogram rendering
+                    var spectrogram = new SpectrogramWindow();
+                    var intensities = app.SpectrumIntensities;
+                    spectrogram.DrawSpectrogram(intensities);
+                    spectrogram.Show();
                 }
                 else
                 {

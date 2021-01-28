@@ -14,6 +14,22 @@ namespace Melody
         private CalculatedSpectrum spectrum;
         public NoteData Note { get; private set; }
 
+        public double[][] SpectrumIntensities
+        {
+            get
+            {
+                if (spectrum == null)
+                    throw new Exception("Spectrum cant be get, because its not initialized");
+
+                var arr = new double[spectrum.Spectrum.Length][];
+
+                for (var i = 0; i < arr.Length; i++)
+                    arr[i] = spectrum.Spectrum[i].Select((c) => c.Magnitude).ToArray();
+
+                return arr;
+            }
+        }
+
         /// <exception cref="AudioFileReadingException">File reading error</exception>
         public void ReadFile(string path)
         {

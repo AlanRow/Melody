@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Melody
 {
-    class CalculatedSpectrum
+    public class CalculatedSpectrum
     {
         public readonly Complex[][] Spectrum;
         public readonly double Duration;
