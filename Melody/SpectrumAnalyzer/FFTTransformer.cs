@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Numerics;
 
+using System.Linq;
+
 namespace Melody.SpectrumAnalyzer
 {
 	/// <summary>
 	/// Description of FFTTransformer.
 	/// </summary>
-	public class FFTTransformer
+	public class FFTTransformer : ITransformer
 	{
 		public Complex[] Transform(double[] signal)
         {
@@ -14,7 +16,16 @@ namespace Melody.SpectrumAnalyzer
             while (size <= signal.Length)
                 size *= 2;
             size /= 2;
-			return FFTByTime(signal, size, 0);
+
+            var spec = FFTByTime(signal, size, 0);
+
+            for (var i = 0; i < spec.Length; i++)
+                spec[i] /= spec.Length;
+
+            spec[0] /= 2;
+            spec[size - 1] /= 2;
+
+            return spec;
         }
 
         // выделить в отдельный класс

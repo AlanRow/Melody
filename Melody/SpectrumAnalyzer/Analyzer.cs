@@ -17,11 +17,11 @@ namespace Melody.SpectrumAnalyzer
 	/// </summary>
 	public class Analyzer
 	{
-		private FFTTransformer transformer;
+		private ITransformer transformer;
 		
 		public Analyzer()
 		{
-			transformer = new FFTTransformer();
+			transformer = new BartlettTransformer(8192);
 		}
 
 		public Complex[][] GetSpectrum(ISignal signal)

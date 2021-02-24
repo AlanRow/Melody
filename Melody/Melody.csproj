@@ -63,12 +63,12 @@
     <Compile Include="NoteDetector\NoteConverter.cs" />
     <Compile Include="NoteDetector\SimpleDetector.cs" />
     <Compile Include="SpectrumAnalyzer\Analyzer.cs" />
+    <Compile Include="SpectrumAnalyzer\BartlettTransformer.cs" />
     <Compile Include="SpectrumAnalyzer\FFTTransformer.cs" />
     <Compile Include="SpectrumAnalyzer\FreqPoint.cs" />
     <Compile Include="SpectrumAnalyzer\ISignal.cs" />
+    <Compile Include="SpectrumAnalyzer\ITransformer.cs" />
     <Compile Include="SpectrumAnalyzer\SimpleSignal.cs" />
-    <Compile Include="SpectrumAnalyzer\Spectrum.cs" />
-    <Compile Include="SpectrumAnalyzer\SpectrumLine.cs" />
     <Compile Include="Structures\CalculatedSpectrum.cs" />
     <Compile Include="Structures\ExtractedSound.cs" />
     <Compile Include="Structures\NoteData.cs" />

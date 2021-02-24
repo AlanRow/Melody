@@ -63,7 +63,7 @@ namespace Melody
 
             var specArr = transformer.GetSpectrum(signal);
 
-            spectrum = new CalculatedSpectrum(specArr, sound.Duration);
+            spectrum = new CalculatedSpectrum(specArr, sound.Duration * specArr[0].Length / sound.Sound.Length );
         }
 
         /// <exception cref="SpectrumNotCalculatedException">Spectrum calculation in process</exception>
