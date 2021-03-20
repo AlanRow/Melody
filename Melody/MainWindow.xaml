@@ -44,7 +44,7 @@
                 Style="{StaticResource MainButton}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Content="Open File"
+                Content="Выбрать файл"
                 Click="OpenFileClick">
             </Button>
         </Grid>

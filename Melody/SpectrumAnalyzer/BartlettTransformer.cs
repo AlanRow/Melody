@@ -22,23 +22,18 @@ namespace Melody.SpectrumAnalyzer
                 throw new ArgumentException(String.Format("Frame size for FFT must be power of 2, but it is {0}", size));
         }
 
-        public Complex[] Transform(double[] signal)
+        public Complex[][] Transform(double[] signal)
         {
-            var spectrum = new Complex[Size];
+            var len = signal.Length / Size;
             var frame = new double[Size];
-            var n = 0;
-
-            for (var start = 0; start + Size < signal.Length; start += Size)
+            var spectrum = new Complex[len][];
+            
+            for (var i = 0; i < len; i++)
             {
-                Array.Copy(signal, start, frame, 0, Size);
-                var spec = transformer.Transform(frame);
-                for (var i = 0; i < spec.Length; i++)
-                    spectrum[i] += spec[i];
-                n++;
+                Array.Copy(signal, i * Size, frame, 0, Size);
+                var specLine = transformer.Transform(frame)[0];
+                spectrum[i] = specLine;
             }
-
-            for (var i = 0; i < spectrum.Length; i++)
-                spectrum[i] /= n;
 
             return spectrum;
         }

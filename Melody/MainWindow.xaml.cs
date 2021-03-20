@@ -44,13 +44,16 @@ namespace Melody
 
                 if (ext == "wav")
                 {
+                    // Parameters settings
+                    //var paramsWin = new TransformParamsSelectWin();
+                    //paramsWin.ShowDialog();
+
                     try
                     {
                         app.ReadFile(path);
                         app.TransformSignal();
                         app.GetNote();
                         MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", (int)Math.Round(app.Note.Hz), app.Note.Name));
-
                     }
                     catch (AudioFileReadingException ex)
                     {

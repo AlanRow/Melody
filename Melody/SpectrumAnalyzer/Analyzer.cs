@@ -21,14 +21,13 @@ namespace Melody.SpectrumAnalyzer
 		
 		public Analyzer()
 		{
-			transformer = new BartlettTransformer(8192);
+			//transformer = new BartlettTransformer(8192);
+			transformer = new WelchTransformer(2048, 2048, WelchTransformer.HannFilter);
 		}
 
 		public Complex[][] GetSpectrum(ISignal signal)
 		{
-			return new Complex[][] {
-				transformer.Transform(signal.GetValues().ToArray())
-			};
+			return transformer.Transform(signal.GetValues().ToArray());
 		}
 	}
 }

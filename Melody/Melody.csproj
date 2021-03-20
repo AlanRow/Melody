@@ -69,12 +69,17 @@
     <Compile Include="SpectrumAnalyzer\ISignal.cs" />
     <Compile Include="SpectrumAnalyzer\ITransformer.cs" />
     <Compile Include="SpectrumAnalyzer\SimpleSignal.cs" />
+    <Compile Include="SpectrumAnalyzer\WelchTransformer.cs" />
     <Compile Include="Structures\CalculatedSpectrum.cs" />
     <Compile Include="Structures\ExtractedSound.cs" />
     <Compile Include="Structures\NoteData.cs" />
+    <Compile Include="Structures\TransformParameters.cs" />
     <Compile Include="Views\SpectrogramRenderer.cs" />
     <Compile Include="Views\SpectrogramWindow.xaml.cs">
       <DependentUpon>SpectrogramWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TransformParamsSelectWin.xaml.cs">
+      <DependentUpon>TransformParamsSelectWin.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -89,6 +94,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\SpectrogramWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TransformParamsSelectWin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
