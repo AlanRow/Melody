@@ -22,7 +22,7 @@ namespace Melody.SpectrumAnalyzer
 		public Analyzer()
 		{
 			//transformer = new BartlettTransformer(1024);
-			transformer = new WelchTransformer(2048, 2048, WelchTransformer.HannFilter);
+			transformer = new WelchTransformer(512, 512, WelchTransformer.RectangleFilter);
 		}
 
 		public Complex[][] GetSpectrum(ISignal signal)

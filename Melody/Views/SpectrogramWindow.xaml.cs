@@ -26,10 +26,10 @@ namespace Melody.Views
 
         public void DrawSpectrogram(double[][] spectrum)
         {
-            var renderer = new SpectrogramRenderer(spectrum);
+            var renderer = new SimpleRenderer(spectrum);
             var img = (Image)FindName("SpectrogramImage");
             var cont = (Canvas)FindName("SpectrogramContainer");
-            renderer.DrawSpectrogram(img, 800, 450);
+            renderer.DrawSpectrogram(img, 1000, 1000);
         }
     }
 }

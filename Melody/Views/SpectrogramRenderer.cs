@@ -16,7 +16,7 @@ namespace Melody.Views
 	{
 		public static int COLOR_SIZE = 3;
 		public static Color INTENSITY_COLOR = Colors.White;
-		public static double INTENSITY_POWER = 0.5;
+		public static double INTENSITY_POWER = 1;
 		public static int FILTER_LIMIT = 10;
 
 		public Color IntensityColor { get; set; }
