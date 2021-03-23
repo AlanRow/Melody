@@ -14,8 +14,8 @@
                x:Key="MainButton">
             <Setter Property="Padding" Value="10 10 10 10" />
             <Setter Property="FontSize" Value="20" />
-            <Setter Property="Background" Value="Gray" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Foreground" Value="Black" />
         </Style>
 
         <Style TargetType="Label"
@@ -23,6 +23,14 @@
             <Setter Property="Padding" Value="10" />
             <Setter Property="FontSize" Value="18" />
             <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style TargetType="Button"
+               x:Key="MenuButton">
+            <Setter Property="Padding" Value="8 2" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Foreground" Value="Black" />
         </Style>
     </Window.Resources>
     <Grid>
@@ -34,9 +42,17 @@
         <Grid 
             Grid.Row="0"
             Background="Black">
-            <Label Style="{StaticResource LogoTitle}">
-                Melody
-            </Label>
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource LogoTitle}">
+                    Melody
+                </Label>
+
+                <Button
+                    Style="{StaticResource MenuButton}"
+                    VerticalAlignment="Center"
+                    Click="OpenSettingsClick"
+                    Content="Settings"/>
+            </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
 

@@ -33,6 +33,11 @@ namespace Melody
             InitializeComponent();
             app = new AppController();
         }
+        private void OpenSettingsClick(object sender, RoutedEventArgs e)
+        {
+            var paramsWin = new TransformParamsSelectWin();
+            paramsWin.ShowDialog();
+        }
         private void OpenFileClick(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
@@ -45,9 +50,6 @@ namespace Melody
                 if (ext == "wav")
                 {
                     // Parameters settings
-                    //var paramsWin = new TransformParamsSelectWin();
-                    //paramsWin.ShowDialog();
-
                     try
                     {
                         app.ReadFile(path);
