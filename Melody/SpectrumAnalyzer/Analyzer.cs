@@ -19,10 +19,9 @@ namespace Melody.SpectrumAnalyzer
 	{
 		private ITransformer transformer;
 		
-		public Analyzer()
+		public Analyzer(Structures.TransformParameters options)
 		{
-			//transformer = new BartlettTransformer(1024);
-			transformer = new WelchTransformer(512, 512, WelchTransformer.RectangleFilter);
+			transformer = new WelchTransformer(options.WindowSize, options.StepSize, options.Type);
 		}
 
 		public Complex[][] GetSpectrum(ISignal signal)

@@ -35,7 +35,7 @@ namespace Melody
         }
         private void OpenSettingsClick(object sender, RoutedEventArgs e)
         {
-            var paramsWin = new TransformParamsSelectWin();
+            var paramsWin = new TransformParamsSelectWin(app.TransformParameters);
             paramsWin.ShowDialog();
         }
         private void OpenFileClick(object sender, RoutedEventArgs e)

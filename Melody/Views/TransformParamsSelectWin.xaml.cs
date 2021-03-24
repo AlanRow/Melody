@@ -71,6 +71,8 @@ namespace Melody.Views
         private static int MIN_SIZE_DEG = 10;
         private static int MAX_SIZE_DEG = 15;
 
+        private Structures.TransformParameters trParams;
+
         private ComboBox filterTypeBox;
         private ComboBox winSizeBox;
         private ComboBox stepSizeBox;
@@ -98,22 +100,49 @@ namespace Melody.Views
             return sizes;
         }
 
-        public TransformParamsSelectWin()
+        public TransformParamsSelectWin(Structures.TransformParameters initParams)
         {
             InitializeComponent();
 
+            trParams = initParams;
+            
+            var filterTypeItems = GetFilterTypeItems();
+
             filterTypeBox = (ComboBox)FindName("FilterTypeSelect");
-            filterTypeBox.ItemsSource = GetFilterTypeItems();
+            filterTypeBox.ItemsSource = filterTypeItems;
+
+            for (var i = 0; i < filterTypeItems.Length; i++)
+                if (filterTypeItems[i].Type == trParams.Type)
+                    filterTypeBox.SelectedIndex = i;
+
+            var sizeItems = GetSizeItems();
 
             winSizeBox = (ComboBox)FindName("WinSizeSelect");
-            winSizeBox.ItemsSource = GetSizeItems();
+            winSizeBox.ItemsSource = sizeItems;
+
+            for (var i = 0; i < sizeItems.Length; i++)
+                if (sizeItems[i].Size == trParams.WindowSize)
+                    winSizeBox.SelectedIndex = i;
 
             stepSizeBox = (ComboBox)FindName("StepSizeSelect");
-            stepSizeBox.ItemsSource = GetSizeItems();
+            stepSizeBox.ItemsSource = sizeItems;
+
+            for (var i = 0; i < sizeItems.Length; i++)
+                if (sizeItems[i].Size == trParams.StepSize)
+                    stepSizeBox.SelectedIndex = i;
         }
 
-        public void AcceptParams()
+        public void AcceptParams(object sender, RoutedEventArgs e)
         {
+            trParams.Type = ((FilterTypeItem)filterTypeBox.SelectedItem).Type;
+            trParams.WindowSize = ((SizeItem)winSizeBox.SelectedItem).Size;
+            trParams.StepSize = ((SizeItem)stepSizeBox.SelectedItem).Size;
+            Close();
+        }
+
+        public void Cancel(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

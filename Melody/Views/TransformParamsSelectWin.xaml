@@ -65,11 +65,13 @@
             <Button
                 Style="{StaticResource FormButton}"
                 Margin="0 0 10 0"
-                Content="Изменить" />
+                Content="Изменить"
+                Click="AcceptParams"/>
             <Button
                 Style="{StaticResource FormButton}"
                 Margin="10 0 0 0"
-                Content="Отменить" />
+                Content="Отменить"
+                Click="Cancel"/>
         </StackPanel>
     </Grid>
 </Window>

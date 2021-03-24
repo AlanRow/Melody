@@ -19,5 +19,12 @@ namespace Melody.Structures
         public FilterType Type;
         public int WindowSize;
         public int StepSize;
+
+        public TransformParameters(FilterType type, int window, int step)
+        {
+            Type = type;
+            WindowSize = window;
+            StepSize = step;
+        }
     }
 }

@@ -12,7 +12,14 @@ namespace Melody
     {
         private ExtractedSound sound;
         private CalculatedSpectrum spectrum;
+
+        public Structures.TransformParameters TransformParameters;
         public NoteData Note { get; private set; }
+
+        public AppController()
+        {
+            TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 1024, 1024);
+        }
 
         public double[][] SpectrumIntensities
         {
@@ -58,7 +65,7 @@ namespace Melody
             if (sound == null)
                 throw new FileNotLoadedException("You must load file before extract signal from it");
 
-            var transformer = new SpectrumAnalyzer.Analyzer();
+            var transformer = new SpectrumAnalyzer.Analyzer(TransformParameters);
             var signal = new SpectrumAnalyzer.SimpleSignal(sound.Sound, sound.Duration);
 
             var specArr = transformer.GetSpectrum(signal);

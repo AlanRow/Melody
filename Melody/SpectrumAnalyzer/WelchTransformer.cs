@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Melody.Structures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -16,11 +17,21 @@ namespace Melody.SpectrumAnalyzer
 
         // Standard filters
         public static Func<int, int, double> RectangleFilter = (size, idx) => 1d;
-        public static Func<int, int, double> TriangleFilter = (size, idx) => 0.5 - (Math.Abs(idx - (double)size/2))/(size - 1);
+        public static Func<int, int, double> TriangleFilter = (size, idx) => 0.5 - (Math.Abs(idx - (double)size / 2)) / (size - 1);
         public static Func<int, int, double> HannFilter = (size, idx) => 0.5 * (1 - Math.Cos(Math.PI * 2 * idx / (size - 1)));
         public static Func<int, int, double> HammingFilter = (size, idx) => 0.53836 - 0.46164 * (Math.Cos(Math.PI * 2 * idx / (size - 1)));
 
-        public WelchTransformer(int size, int step, Func<int, int, double> filter)
+        private static Dictionary<FilterType, Func<int, int, double>> filtersMap = new Dictionary<FilterType, Func<int, int, double>>()
+        {
+            { FilterType.Rectangle, RectangleFilter },
+            { FilterType.Triangle, TriangleFilter },
+            { FilterType.Hann, HannFilter },
+            { FilterType.Hamming, HammingFilter },
+        };
+
+        public WelchTransformer(int size, int step, FilterType filterType) : this(size, step, filtersMap[filterType]) { }
+
+        private WelchTransformer(int size, int step, Func<int, int, double> filter)
         {
             transformer = new FFTTransformer();
 
