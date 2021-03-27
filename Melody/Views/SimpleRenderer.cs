@@ -109,10 +109,16 @@ namespace Melody.Views
 
 			var stretchFactor = ((double)reqHeight) / specH;
 
-			for (var i = 0; i < reqHeight; i++)
+			/*for (var i = 0; i < reqHeight; i++)
 			{
 				var specIdx = (int)((i + 1) / stretchFactor);
 				var specVal = (specAtTime[specIdx] - min)/max;
+				intens[i] = specVal;
+			}*/
+			for (var i = 0; i < reqHeight; i++)
+			{
+				var specIdx = (int)((i + 1) / stretchFactor / Math.Pow(1.001, reqHeight - i));
+				var specVal = (specAtTime[specIdx] - min) / max;
 				intens[i] = specVal;
 			}
 
