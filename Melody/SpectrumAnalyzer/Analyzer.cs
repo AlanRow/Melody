@@ -18,15 +18,22 @@ namespace Melody.SpectrumAnalyzer
 	public class Analyzer
 	{
 		private ITransformer transformer;
+		private Structures.TransformParameters options;
 		
-		public Analyzer(Structures.TransformParameters options)
+		public Analyzer(Structures.TransformParameters transformOptions)
 		{
+			options = transformOptions;
 			transformer = new WelchTransformer(options.WindowSize, options.StepSize, options.Type);
 		}
 
 		public Complex[][] GetSpectrum(ISignal signal)
 		{
-			return transformer.Transform(signal.GetValues().ToArray());
+			var spectrum = transformer.Transform(signal.GetValues().ToArray());
+
+			var winDuration = signal.GetDurationInSeconds() * options.WindowSize / signal.GetActualLength();
+			DiscreteLPF.Filter(spectrum, winDuration, 100);
+			// DiscreteHPF.Filter(spectrum, winDuration, 2000);
+			return spectrum;
 		}
 	}
 }
