@@ -25,6 +25,7 @@ namespace Melody.Structures
             Type = type;
             WindowSize = window;
             StepSize = step;
+
         }
     }
 }

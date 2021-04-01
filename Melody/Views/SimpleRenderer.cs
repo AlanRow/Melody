@@ -23,16 +23,22 @@ namespace Melody.Views
 		private int lastHeight;
 		private Image lastImg;
 
+		private double maxFreq;
+
+		private double startFreq = 220;
+		private double octavesCount = 6.0;
+
 		public double[][] Spectrum { get; set; }
 
-		public SimpleRenderer() : this(null) { }
+		//public SimpleRenderer() : this(null) { }
 
-		public SimpleRenderer(double[][] spec) : this(spec, INTENSITY_COLOR) { }
+		public SimpleRenderer(double[][] spec, double maxFreqValue) : this(spec, maxFreqValue, INTENSITY_COLOR) { }
 
-		public SimpleRenderer(double[][] spec, Color color)
+		public SimpleRenderer(double[][] spec, double maxFreqValue, Color color)
 		{
 			IntensityColor = color;
 			Spectrum = spec;
+			maxFreq = maxFreqValue;
 		}
 
 		public void DrawSpectrogram(Image img, int width, int height)
@@ -107,18 +113,16 @@ namespace Melody.Views
 			var intens = new double[reqHeight];
 			var specH = specAtTime.Length / 2 - 1;
 
-			var stretchFactor = ((double)reqHeight) / specH;
+			var startIdx = (int) (startFreq / maxFreq * specH);
+			var powerStep = octavesCount / reqHeight;
 
-			/*for (var i = 0; i < reqHeight; i++)
-			{
-				var specIdx = (int)((i + 1) / stretchFactor);
-				var specVal = (specAtTime[specIdx] - min)/max;
-				intens[i] = specVal;
-			}*/
+			var stretchFactor = ((double)reqHeight) / (specH);
+
 			for (var i = 0; i < reqHeight; i++)
 			{
-				var specIdx = (int)((i + 1) / stretchFactor / Math.Pow(1.001, reqHeight - i));
-				var specVal = (specAtTime[specIdx] - min) / max;
+				var specIdx = (int)(Math.Pow(2, i * powerStep) * startIdx);
+				var specVal = (specIdx < specH) ? (specAtTime[specIdx] - min) / max : 0;
+				//var specVal = Math.Log(specAtTime[specIdx] - min + 1) / Math.Log(max);
 				intens[i] = specVal;
 			}
 

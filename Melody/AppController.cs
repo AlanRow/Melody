@@ -11,6 +11,7 @@ namespace Melody
     class AppController
     {
         private ExtractedSound sound;
+        private ISignal signal;
         private CalculatedSpectrum spectrum;
 
         public Structures.TransformParameters TransformParameters;
@@ -35,6 +36,16 @@ namespace Melody
 
                 return arr;
             }
+        }
+
+        public double GetMaxFreq()
+        {
+            if (sound == null)
+            {
+                throw new Exception("Invalid get max freq of empty spectrum");
+            }
+
+            return (double)(signal.GetActualLength()) / signal.GetDurationInSeconds();
         }
 
         /// <exception cref="AudioFileReadingException">File reading error</exception>
@@ -66,7 +77,7 @@ namespace Melody
                 throw new FileNotLoadedException("You must load file before extract signal from it");
 
             var transformer = new SpectrumAnalyzer.Analyzer(TransformParameters);
-            var signal = new SpectrumAnalyzer.SimpleSignal(sound.Sound, sound.Duration);
+            signal = new SpectrumAnalyzer.SimpleSignal(sound.Sound, sound.Duration);
 
             var specArr = transformer.GetSpectrum(signal);
 

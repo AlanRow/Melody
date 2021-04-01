@@ -68,7 +68,7 @@ namespace Melody
                     // Spectrogram rendering
                     var spectrogram = new SpectrogramWindow();
                     var intensities = app.SpectrumIntensities;
-                    spectrogram.DrawSpectrogram(intensities);
+                    spectrogram.DrawSpectrogram(intensities, app.GetMaxFreq());
                     spectrogram.Show();
                 }
                 else
