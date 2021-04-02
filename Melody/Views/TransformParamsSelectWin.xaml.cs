@@ -76,6 +76,7 @@ namespace Melody.Views
         private ComboBox filterTypeBox;
         private ComboBox winSizeBox;
         private ComboBox stepSizeBox;
+        private TextBox lowFreqInput;
         private FilterTypeItem[] GetFilterTypeItems()
         {
             return new FilterTypeItem[]
@@ -130,6 +131,9 @@ namespace Melody.Views
             for (var i = 0; i < sizeItems.Length; i++)
                 if (sizeItems[i].Size == trParams.StepSize)
                     stepSizeBox.SelectedIndex = i;
+
+            lowFreqInput = (TextBox)FindName("LowFreqInput");
+            lowFreqInput.Text = trParams.LPFLimit.ToString();
         }
 
         public void AcceptParams(object sender, RoutedEventArgs e)
@@ -137,6 +141,20 @@ namespace Melody.Views
             trParams.Type = ((FilterTypeItem)filterTypeBox.SelectedItem).Type;
             trParams.WindowSize = ((SizeItem)winSizeBox.SelectedItem).Size;
             trParams.StepSize = ((SizeItem)stepSizeBox.SelectedItem).Size;
+
+            try
+            {
+                var lpfLimit = Double.Parse(lowFreqInput.Text);
+
+                if (lpfLimit <= 0)
+                    throw new FormatException();
+
+                trParams.LPFLimit = lpfLimit;
+            } 
+            catch (FormatException ex)
+            {
+                MessageBox.Show("Нижняя частота должна быть действительным положительным числом");
+            }
             Close();
         }
 

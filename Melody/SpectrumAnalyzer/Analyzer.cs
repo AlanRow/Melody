@@ -31,7 +31,7 @@ namespace Melody.SpectrumAnalyzer
 			var spectrum = transformer.Transform(signal.GetValues().ToArray());
 
 			var winDuration = signal.GetDurationInSeconds() * options.WindowSize / signal.GetActualLength();
-			//DiscreteLPF.Filter(spectrum, winDuration, 100);
+			DiscreteLPF.Filter(spectrum, winDuration, options.LPFLimit);
 			// DiscreteHPF.Filter(spectrum, winDuration, 2000);
 			return spectrum;
 		}

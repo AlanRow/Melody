@@ -51,7 +51,7 @@
                     Style="{StaticResource MenuButton}"
                     VerticalAlignment="Center"
                     Click="OpenSettingsClick"
-                    Content="Settings"/>
+                    Content="Настройки преобразования"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">

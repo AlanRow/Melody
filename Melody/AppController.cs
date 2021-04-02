@@ -19,7 +19,7 @@ namespace Melody
 
         public AppController()
         {
-            TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 1024, 1024);
+            TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 1024, 1024, 100.0);
         }
 
         public double[][] SpectrumIntensities

@@ -19,13 +19,14 @@ namespace Melody.Structures
         public FilterType Type;
         public int WindowSize;
         public int StepSize;
+        public double LPFLimit;
 
-        public TransformParameters(FilterType type, int window, int step)
+        public TransformParameters(FilterType type, int window, int step, double lowFreq)
         {
             Type = type;
             WindowSize = window;
             StepSize = step;
-
+            LPFLimit = lowFreq;
         }
     }
 }
