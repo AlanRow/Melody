@@ -65,17 +65,28 @@ namespace Melody
                     {
                         MessageBox.Show(ex.Message, "Error");
                     }
-                    // Spectrogram rendering
-                    var spectrogram = new SpectrogramWindow();
-                    var intensities = app.SpectrumIntensities;
-                    spectrogram.DrawSpectrogram(intensities, app.GetWinDuration());
-                    spectrogram.Show();
                 }
                 else
                 {
                     MessageBox.Show("Only WAV files is supported!", "Invalid file extension");
                 }
+            }
+        }
 
+        private void OpenSpecClick(object sender, RoutedEventArgs e)
+        {
+            // Spectrogram rendering
+            var spectrogram = new SpectrogramWindow();
+
+            try
+            {
+                var intensities = app.SpectrumIntensities;
+                spectrogram.DrawSpectrogram(intensities, app.GetWinDuration());
+                spectrogram.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Чтобы построить спектрограмму, загрузите звуковой файл.");
             }
         }
 

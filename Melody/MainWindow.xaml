@@ -27,6 +27,7 @@
 
         <Style TargetType="Button"
                x:Key="MenuButton">
+            <Setter Property="Margin" Value="5" />
             <Setter Property="Padding" Value="8 2" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Background" Value="LightGray" />
@@ -52,6 +53,12 @@
                     VerticalAlignment="Center"
                     Click="OpenSettingsClick"
                     Content="Настройки преобразования"/>
+
+                <Button
+                    Style="{StaticResource MenuButton}"
+                    VerticalAlignment="Center"
+                    Click="OpenSpecClick"
+                    Content="Спектрограмма"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
