@@ -24,12 +24,12 @@ namespace Melody.Views
             InitializeComponent();
         }
 
-        public void DrawSpectrogram(double[][] spectrum, double maxFreq)
+        public void DrawSpectrogram(double[][] spectrum, double winDur)
         {
-            var renderer = new SimpleRenderer(spectrum, maxFreq);
+            var renderer = new SimpleRenderer(spectrum, winDur);
             var img = (Image)FindName("SpectrogramImage");
             var cont = (Canvas)FindName("SpectrogramContainer");
-            renderer.DrawSpectrogram(img, 800, 450);
+            renderer.DrawSpectrogram(img, 1400, 450);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Melody.Views
 	public class SimpleRenderer
 	{
 		public static int COLOR_SIZE = 3;
-		public static Color INTENSITY_COLOR = Colors.White;
+		public static Color INTENSITY_COLOR = Colors.Red;
 
 		public Color IntensityColor { get; set; }
 
@@ -23,22 +23,24 @@ namespace Melody.Views
 		private int lastHeight;
 		private Image lastImg;
 
-		private double maxFreq;
+		// private double maxFreq;
+		private double winDuration;
 
-		private double startFreq = 220;
-		private double octavesCount = 6.0;
+		private double startFreq = 100;
+		private double octavesCount = 4.0;
 
 		public double[][] Spectrum { get; set; }
 
 		//public SimpleRenderer() : this(null) { }
 
-		public SimpleRenderer(double[][] spec, double maxFreqValue) : this(spec, maxFreqValue, INTENSITY_COLOR) { }
+		public SimpleRenderer(double[][] spec, double winDurationInSec) : this(spec, winDurationInSec, INTENSITY_COLOR) { }
 
-		public SimpleRenderer(double[][] spec, double maxFreqValue, Color color)
+		public SimpleRenderer(double[][] spec, double winDurationInSec, Color color)
 		{
 			IntensityColor = color;
 			Spectrum = spec;
-			maxFreq = maxFreqValue;
+			winDuration = winDurationInSec;
+			//maxFreq = maxFreqValue;
 		}
 
 		public void DrawSpectrogram(Image img, int width, int height)
@@ -65,16 +67,27 @@ namespace Melody.Views
 		private byte[] GeneratePixels(int width, int height)
 		{
 			var pixels = new byte[height * width * COLOR_SIZE];
-			var max = GetMaxLimit(Spectrum);
-			var min = GetMinLimit(Spectrum);
 
 			var stretchFactor = ((double)width)/Spectrum.Length;
+
+			var intens = new double[width][];
 
 			for (var col = 0; col < width; col++)
 			{
 				var specIdx = (int)((col + 1) / stretchFactor - 1);
-				var intens = GetIntensities(Spectrum[specIdx], height, max, min);
-				FillColumn(pixels, intens, col, width);
+				intens[col] = GetIntensities(Spectrum[specIdx], height);
+			}
+
+			var max = GetMaxLimit(intens);
+			var min = GetMinLimit(intens);
+
+			for (var col = 0; col < width; col++)
+				for (var row = 0; row < height; row++)
+					intens[col][row] = (intens[col][row] - min) / max;
+
+			for (var col = 0; col < width; col++)
+			{
+				FillColumn(pixels, intens[col], col, width);
 			}
 
 			return pixels;
@@ -108,12 +121,16 @@ namespace Melody.Views
 			return min;
 		}
 
-		private double[] GetIntensities(double[] specAtTime, int reqHeight, double max, double min)
+		private double[] GetIntensities(double[] specAtTime, int reqHeight)
 		{
 			var intens = new double[reqHeight];
 			var specH = specAtTime.Length / 2 - 1;
 
-			var startIdx = (int) (startFreq / maxFreq * specH);
+			// freq = idx / win duration
+			// idx = freq * win duration
+
+			var startIdx = (int)(startFreq * winDuration);
+			// var startIdx = (int) (startFreq / maxFreq * specH);
 			var powerStep = octavesCount / reqHeight;
 
 			var stretchFactor = ((double)reqHeight) / (specH);
@@ -121,10 +138,24 @@ namespace Melody.Views
 			for (var i = 0; i < reqHeight; i++)
 			{
 				var specIdx = (int)(Math.Pow(2, i * powerStep) * startIdx);
-				var specVal = (specIdx < specH) ? (specAtTime[specIdx] - min) / max : 0;
+
+				//var specVal = (specIdx < specH) ? (specAtTime[specIdx] - min) / max : 0;
 				//var specVal = Math.Log(specAtTime[specIdx] - min + 1) / Math.Log(max);
-				intens[i] = specVal;
+				if (specIdx < reqHeight)
+				{
+					var specVal = specAtTime[specIdx];
+					intens[i] = specVal;
+				} else
+                {
+					intens[i] = 0;
+                }
 			}
+
+			/*var max = intens.Max();
+			var min = intens.Min();
+
+			for (var i = 0; i < intens.Length; i++)
+				intens[i] = (intens[i] - min) / max;*/
 
 			return intens;
 		}

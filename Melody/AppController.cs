@@ -38,14 +38,16 @@ namespace Melody
             }
         }
 
-        public double GetMaxFreq()
+        public double GetWinDuration()
         {
             if (sound == null)
             {
                 throw new Exception("Invalid get max freq of empty spectrum");
             }
 
-            return (double)(signal.GetActualLength()) / signal.GetDurationInSeconds();
+            // win dur = win length / SF = win length / signal length * signal duration
+            // SF = signal length / signal duration
+            return signal.GetDurationInSeconds() * TransformParameters.WindowSize / signal.GetActualLength();
         }
 
         /// <exception cref="AudioFileReadingException">File reading error</exception>

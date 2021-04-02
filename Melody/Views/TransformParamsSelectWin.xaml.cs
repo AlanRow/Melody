@@ -68,7 +68,7 @@ namespace Melody.Views
     /// </summary>
     public partial class TransformParamsSelectWin : Window
     {
-        private static int MIN_SIZE_DEG = 10;
+        private static int MIN_SIZE_DEG = 6;
         private static int MAX_SIZE_DEG = 15;
 
         private Structures.TransformParameters trParams;
