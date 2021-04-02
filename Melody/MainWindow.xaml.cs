@@ -38,6 +38,11 @@ namespace Melody
             var paramsWin = new TransformParamsSelectWin(app.TransformParameters);
             paramsWin.ShowDialog();
         }
+        private void OpenViewSettingsClick(object sender, RoutedEventArgs e)
+        {
+            var paramsWin = new SpecParamsSelectWin(app.SpecParameters);
+            paramsWin.ShowDialog();
+        }
         private void OpenFileClick(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
@@ -81,7 +86,7 @@ namespace Melody
             try
             {
                 var intensities = app.SpectrumIntensities;
-                spectrogram.DrawSpectrogram(intensities, app.GetWinDuration());
+                spectrogram.DrawSpectrogram(intensities, app.GetWinDuration(), app.SpecParameters);
                 spectrogram.Show();
             }
             catch (Exception ex)

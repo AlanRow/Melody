@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Melody.Structures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,21 +27,23 @@ namespace Melody.Views
 		// private double maxFreq;
 		private double winDuration;
 
-		private double startFreq = 100;
-		private double octavesCount = 4.0;
+		private double startFreq;
+		private double octavesCount;
 
 		public double[][] Spectrum { get; set; }
 
 		//public SimpleRenderer() : this(null) { }
 
-		public SimpleRenderer(double[][] spec, double winDurationInSec) : this(spec, winDurationInSec, INTENSITY_COLOR) { }
+		//public SimpleRenderer(double[][] spec, double winDurationInSec) : this(spec, winDurationInSec, INTENSITY_COLOR) { }
 
-		public SimpleRenderer(double[][] spec, double winDurationInSec, Color color)
+		public SimpleRenderer(double[][] spec, double winDurationInSec, SpecViewParameters options)
 		{
-			IntensityColor = color;
+			IntensityColor = INTENSITY_COLOR;
 			Spectrum = spec;
 			winDuration = winDurationInSec;
 			//maxFreq = maxFreqValue;
+			startFreq = options.StartFreq;
+			octavesCount = options.OctavesCount;
 		}
 
 		public void DrawSpectrogram(Image img, int width, int height)

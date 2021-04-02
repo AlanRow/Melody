@@ -57,6 +57,12 @@
                 <Button
                     Style="{StaticResource MenuButton}"
                     VerticalAlignment="Center"
+                    Click="OpenViewSettingsClick"
+                    Content="Настройки визуализации"/>
+
+                <Button
+                    Style="{StaticResource MenuButton}"
+                    VerticalAlignment="Center"
                     Click="OpenSpecClick"
                     Content="Спектрограмма"/>
             </StackPanel>

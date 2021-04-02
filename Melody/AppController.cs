@@ -15,11 +15,13 @@ namespace Melody
         private CalculatedSpectrum spectrum;
 
         public Structures.TransformParameters TransformParameters;
+        public Structures.SpecViewParameters SpecParameters;
         public NoteData Note { get; private set; }
 
         public AppController()
         {
             TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 1024, 1024, 100.0);
+            SpecParameters = new Structures.SpecViewParameters(100, 4);
         }
 
         public double[][] SpectrumIntensities
