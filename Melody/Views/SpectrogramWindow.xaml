@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Melody.Views"
         mc:Ignorable="d"
-        Title="SpectrogramWindow" Height="450" Width="800">
+        Title="SpectrogramWindow" Height="640" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="450" />
+            <RowDefinition Height="640" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="800" />

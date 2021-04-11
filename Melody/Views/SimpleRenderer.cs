@@ -41,14 +41,13 @@ namespace Melody.Views
 		private int lastHeight;
 		private Image lastImg;
 
-		// private double maxFreq;
 		private double winDuration;
 
 		private double startFreq;
 		private double octavesCount;
 
 		private FreqScaleType scaleType = FreqScaleType.Linear;
-		private IntensityCalcMethod intensityMethod = IntensityCalcMethod.Linear;
+		private IntensityCalcMethod calcMethod = IntensityCalcMethod.Linear;
 		private double intensityPower = 2;
 		private IntensSumMethod sumMethod = IntensSumMethod.SquareAverage;
 
@@ -62,6 +61,10 @@ namespace Melody.Views
 			//maxFreq = maxFreqValue;
 			startFreq = options.StartFreq;
 			octavesCount = options.OctavesCount;
+
+			scaleType = options.ScaleType;
+			calcMethod = options.CalcMethod;
+			sumMethod = options.SumMethod;
 		}
 
 		public void DrawSpectrogram(Image img, int width, int height)
@@ -70,7 +73,6 @@ namespace Melody.Views
 			lastWidth = width;
 			lastHeight = height;
 
-			/*var pixels = GeneratePixels(width, height);*/
 			var pixels = GeneratePixels(width, height);
 			var area = new Int32Rect(0, 0, width, height);
 			var bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr24, null);
@@ -143,7 +145,7 @@ namespace Melody.Views
 
 		private double GetRelativeIntensity(double abs, double max)
         {
-			switch (intensityMethod)
+			switch (calcMethod)
             {
 				case IntensityCalcMethod.Linear:
 					return abs / max;

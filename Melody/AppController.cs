@@ -21,7 +21,7 @@ namespace Melody
         public AppController()
         {
             TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 1024, 1024, 100.0);
-            SpecParameters = new Structures.SpecViewParameters(100, 4);
+            SpecParameters = new Structures.SpecViewParameters(100, 4, Views.IntensityCalcMethod.Linear, Views.IntensSumMethod.Max, Views.FreqScaleType.Linear);
         }
 
         public double[][] SpectrumIntensities

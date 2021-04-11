@@ -83,7 +83,7 @@ namespace Melody
             // Spectrogram rendering
             var spectrogram = new SpectrogramWindow();
 
-            try
+            /*try
             {
                 var intensities = app.SpectrumIntensities;
                 spectrogram.DrawSpectrogram(intensities, app.GetWinDuration(), app.SpecParameters);
@@ -92,7 +92,10 @@ namespace Melody
             catch (Exception ex)
             {
                 MessageBox.Show("Чтобы построить спектрограмму, загрузите звуковой файл.");
-            }
+            }*/
+            var intensities = app.SpectrumIntensities;
+            spectrogram.DrawSpectrogram(intensities, app.GetWinDuration(), app.SpecParameters);
+            spectrogram.Show();
         }
 
     }

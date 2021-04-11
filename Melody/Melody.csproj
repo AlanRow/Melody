@@ -77,6 +77,7 @@
     <Compile Include="Structures\NoteData.cs" />
     <Compile Include="Structures\SpecViewParameters.cs" />
     <Compile Include="Structures\TransformParameters.cs" />
+    <Compile Include="Views\ParamItem.cs" />
     <Compile Include="Views\SimpleRenderer.cs" />
     <Compile Include="Views\SpecParamsSelectWin.xaml.cs">
       <DependentUpon>SpecParamsSelectWin.xaml</DependentUpon>
