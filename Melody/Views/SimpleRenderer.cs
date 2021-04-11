@@ -22,6 +22,13 @@ namespace Melody.Views
 		Linear,
 		Log,
 	}
+	public enum IntensSumMethod
+    {
+		No,
+		Max,
+		Average,
+		SquareAverage,
+    }
 
 	public class SimpleRenderer
 	{
@@ -41,15 +48,11 @@ namespace Melody.Views
 		private double octavesCount;
 
 		private FreqScaleType scaleType = FreqScaleType.Linear;
-
 		private IntensityCalcMethod intensityMethod = IntensityCalcMethod.Linear;
 		private double intensityPower = 2;
+		private IntensSumMethod sumMethod = IntensSumMethod.SquareAverage;
 
 		public double[][] Spectrum { get; set; }
-
-		//public SimpleRenderer() : this(null) { }
-
-		//public SimpleRenderer(double[][] spec, double winDurationInSec) : this(spec, winDurationInSec, INTENSITY_COLOR) { }
 
 		public SimpleRenderer(double[][] spec, double winDurationInSec, SpecViewParameters options)
 		{
@@ -68,7 +71,7 @@ namespace Melody.Views
 			lastHeight = height;
 
 			/*var pixels = GeneratePixels(width, height);*/
-			var pixels = GenerateSimpleLinear(width, height);
+			var pixels = GeneratePixels(width, height);
 			var area = new Int32Rect(0, 0, width, height);
 			var bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr24, null);
 
@@ -82,7 +85,7 @@ namespace Melody.Views
 				DrawSpectrogram(lastImg, lastWidth, lastHeight);
 		}
 
-		private byte[] GenerateSimpleLinear(int width, int height)
+		private byte[] GeneratePixels(int width, int height)
         {
 			var pixels = new byte[height * width * COLOR_SIZE];
 			var max = 0d;
@@ -96,19 +99,21 @@ namespace Melody.Views
 						max = Spectrum[i][j];
 
 			var xStretch = ((double)width) / specW;
-			var yStretch = ((double)height) / specH;
-
-			// Draw linear spec
 			for (var col = 0; col < width; col++)
             {
 				var i = (int) (col / xStretch);
 				var intens = new double[height];
+				var oldJ = 0;
 				for (var row = 0; row < height; row++)
                 {
-					var j = (int)(row / yStretch);
-					var abs = Spectrum[i][j];
+					var j = GetSpecCoord(row, height);
+					if (j >= specH)
+						break;
+
+					var abs = GetSummarizedIntensity(Spectrum[i], oldJ, j + 1);
 					var rel = GetRelativeIntensity(abs, max);
 					intens[row] = rel;
+					oldJ = j;
                 }
 				FillColumn(pixels, intens, col, width);
             }
@@ -116,113 +121,22 @@ namespace Melody.Views
 			return pixels;
         }
 
-		private byte[] GeneratePixels(int width, int height)
-		{
-			var pixels = new byte[height * width * COLOR_SIZE];
-
-			var stretchFactor = ((double)width)/Spectrum.Length;
-
-			var intens = new double[width][];
-
-			for (var col = 0; col < width; col++)
-			{
-				var specIdx = (int)((col + 1) / stretchFactor - 1);
-				intens[col] = GetIntensities(Spectrum[specIdx], height);
-			}
-
-			var max = GetMaxLimit(intens);
-			var min = GetMinLimit(intens);
-
-			for (var col = 0; col < width; col++)
-				for (var row = 0; row < height; row++)
-					intens[col][row] = (intens[col][row] - min) / (max - min);
-
-			for (var col = 0; col < width; col++)
-			{
-				FillColumn(pixels, intens[col], col, width);
-			}
-
-			return pixels;
-		}
-
-		/*
-		 * Returns max value filtered 'filterLimit' - 1 max values
-		 * Returns max value with 'filterLimit' equals to 1
-		 */
-		private double GetMaxLimit(double[][] spectrum)
-		{
-			var max = double.MinValue;
-			foreach (var spec in spectrum)
-				// Start from 1 (0 freq is not used) to 1-st half end (2-nd half duplicates 1-st)
-				for (var i = 0; i < spec.Length / 2; i++)
-					if (spec[i] > max)
-						max = spec[i];
-
-			return max;
-		}
-
-		private double GetMinLimit(double[][] spectrum)
-		{
-			var min = double.MaxValue;
-			foreach (var spec in spectrum)
-				// Start from 1 (0 freq is not used) to 1-st half end (2-nd half duplicates 1-st)
-				for (var i = 0; i < spec.Length / 2; i++)
-					if (spec[i] < min)
-						min = spec[i];
-
-			return min;
-		}
-
-		private double[] GetIntensities(double[] specAtTime, int reqHeight)
-		{
-			var intens = new double[reqHeight];
-			var specH = specAtTime.Length / 2 - 1;
-
-			// freq = idx / win duration
-			// idx = freq * win duration
-
-			var startIdx = (int)(startFreq * winDuration);
-			// var startIdx = (int) (startFreq / maxFreq * specH);
-			var powerStep = octavesCount / reqHeight;
-
-			var stretchFactor = ((double)reqHeight) / (specH);
-
-			for (var i = 0; i < reqHeight; i++)
-			{
-				var specIdx = (int)(Math.Pow(2, i * powerStep) * startIdx);
-
-				//var specVal = (specIdx < specH) ? (specAtTime[specIdx] - min) / max : 0;
-				//var specVal = Math.Log(specAtTime[specIdx] - min + 1) / Math.Log(max);
-				if (specIdx < reqHeight)
-				{
-					var specVal = specAtTime[specIdx];
-					intens[i] = specVal;
-				} else
-                {
-					intens[i] = 0;
-                }
-			}
-
-			/*var max = intens.Max();
-			var min = intens.Min();
-
-			for (var i = 0; i < intens.Length; i++)
-				intens[i] = (intens[i] - min) / max;*/
-
-			return intens;
-		}
-
 		private int GetSpecCoord(int pixelY, int pixelHeight)
         {
-			var stretch = ((double)pixelHeight) / Spectrum[0].Length;
+			var stretch = ((double)pixelHeight) / Spectrum[0].Length * 2;
+
 			switch (scaleType)
             {
 				case FreqScaleType.Linear:
 					return (int) (pixelY / stretch);
 				case FreqScaleType.Log:
 					var specStep = octavesCount / pixelHeight;
-					return (int) (startFreq * Math.Pow(2, specStep * pixelY));
-            }
+					var idx = (int)(startFreq * Math.Pow(2, specStep * pixelY));
+					if (idx >= Spectrum[0].Length / 2)
+						return Spectrum[0].Length + 1;
+					
+					return idx;
+			}
 
 			return 0;
         }
@@ -238,6 +152,33 @@ namespace Melody.Views
 				case IntensityCalcMethod.Pow:
 					return Math.Pow(abs / max, intensityPower);
             }
+
+			return 0;
+        }
+
+		private double GetSummarizedIntensity(double[] intens, int start, int end)
+        {
+			switch (sumMethod)
+            {
+				case IntensSumMethod.No:
+					return intens[end - 1];
+				case IntensSumMethod.Max:
+					var max = 0d;
+					for (var i = start; i < end; i++)
+						if (intens[i] > max)
+							max = intens[i];
+					return max;
+				case IntensSumMethod.Average:
+					var sum = 0d;
+					for (var i = 0; i < end; i++)
+						sum += intens[i];
+					return sum / (end - start);
+				case IntensSumMethod.SquareAverage:
+					var sqSum = 0d;
+					for (var i = 0; i < end; i++)
+						sqSum += intens[i] * intens[i];
+					return Math.Sqrt(sqSum / (end - start));
+			}
 
 			return 0;
         }
