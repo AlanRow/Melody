@@ -16,7 +16,12 @@ namespace Melody.Views
 		Linear,
 		Log,
 		Pow,
-    }
+	}
+	public enum FreqScaleType
+	{
+		Linear,
+		Log,
+	}
 
 	public class SimpleRenderer
 	{
@@ -34,6 +39,8 @@ namespace Melody.Views
 
 		private double startFreq;
 		private double octavesCount;
+
+		private FreqScaleType scaleType = FreqScaleType.Linear;
 
 		private IntensityCalcMethod intensityMethod = IntensityCalcMethod.Linear;
 		private double intensityPower = 2;
@@ -204,6 +211,21 @@ namespace Melody.Views
 
 			return intens;
 		}
+
+		private int GetSpecCoord(int pixelY, int pixelHeight)
+        {
+			var stretch = ((double)pixelHeight) / Spectrum[0].Length;
+			switch (scaleType)
+            {
+				case FreqScaleType.Linear:
+					return (int) (pixelY / stretch);
+				case FreqScaleType.Log:
+					var specStep = octavesCount / pixelHeight;
+					return (int) (startFreq * Math.Pow(2, specStep * pixelY));
+            }
+
+			return 0;
+        }
 
 		private double GetRelativeIntensity(double abs, double max)
         {
