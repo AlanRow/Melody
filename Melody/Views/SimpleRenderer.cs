@@ -10,9 +10,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Melody.Views
-{   /// <summary>
-	/// Description of SpectrogramRenderer.
-	/// </summary>
+{
+	public enum IntensityCalcMethod
+    {
+		Linear,
+		Log,
+		Pow,
+    }
+
 	public class SimpleRenderer
 	{
 		public static int COLOR_SIZE = 3;
@@ -29,6 +34,9 @@ namespace Melody.Views
 
 		private double startFreq;
 		private double octavesCount;
+
+		private IntensityCalcMethod intensityMethod = IntensityCalcMethod.Linear;
+		private double intensityPower = 2;
 
 		public double[][] Spectrum { get; set; }
 
@@ -52,7 +60,8 @@ namespace Melody.Views
 			lastWidth = width;
 			lastHeight = height;
 
-			var pixels = GeneratePixels(width, height);
+			/*var pixels = GeneratePixels(width, height);*/
+			var pixels = GenerateSimpleLinear(width, height);
 			var area = new Int32Rect(0, 0, width, height);
 			var bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr24, null);
 
@@ -66,6 +75,39 @@ namespace Melody.Views
 				DrawSpectrogram(lastImg, lastWidth, lastHeight);
 		}
 
+		private byte[] GenerateSimpleLinear(int width, int height)
+        {
+			var pixels = new byte[height * width * COLOR_SIZE];
+			var max = 0d;
+			var specW = Spectrum.Length;
+			var specH = Spectrum[0].Length;
+
+			// Find max value
+			for (var i = 0; i < specW; i++)
+				for (var j = 0; j < specH; j++)
+					if (max < Spectrum[i][j])
+						max = Spectrum[i][j];
+
+			var xStretch = ((double)width) / specW;
+			var yStretch = ((double)height) / specH;
+
+			// Draw linear spec
+			for (var col = 0; col < width; col++)
+            {
+				var i = (int) (col / xStretch);
+				var intens = new double[height];
+				for (var row = 0; row < height; row++)
+                {
+					var j = (int)(row / yStretch);
+					var abs = Spectrum[i][j];
+					var rel = GetRelativeIntensity(abs, max);
+					intens[row] = rel;
+                }
+				FillColumn(pixels, intens, col, width);
+            }
+
+			return pixels;
+        }
 
 		private byte[] GeneratePixels(int width, int height)
 		{
@@ -86,7 +128,7 @@ namespace Melody.Views
 
 			for (var col = 0; col < width; col++)
 				for (var row = 0; row < height; row++)
-					intens[col][row] = (intens[col][row] - min) / max;
+					intens[col][row] = (intens[col][row] - min) / (max - min);
 
 			for (var col = 0; col < width; col++)
 			{
@@ -162,6 +204,21 @@ namespace Melody.Views
 
 			return intens;
 		}
+
+		private double GetRelativeIntensity(double abs, double max)
+        {
+			switch (intensityMethod)
+            {
+				case IntensityCalcMethod.Linear:
+					return abs / max;
+				case IntensityCalcMethod.Log:
+					return Math.Log(abs + 1) / Math.Log(max + 1);
+				case IntensityCalcMethod.Pow:
+					return Math.Pow(abs / max, intensityPower);
+            }
+
+			return 0;
+        }
 
 		private void FillColumn(byte[] pixels, double[] intensities, int column, int rowWidth)
 		{
