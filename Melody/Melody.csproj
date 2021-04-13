@@ -64,6 +64,7 @@
     <Compile Include="NoteDetector\SimpleDetector.cs" />
     <Compile Include="SpectrumAnalyzer\Analyzer.cs" />
     <Compile Include="SpectrumAnalyzer\BartlettTransformer.cs" />
+    <Compile Include="SpectrumAnalyzer\ConstantQTransformer.cs" />
     <Compile Include="SpectrumAnalyzer\DiscreteHPF.cs" />
     <Compile Include="SpectrumAnalyzer\FFTTransformer.cs" />
     <Compile Include="SpectrumAnalyzer\FreqPoint.cs" />

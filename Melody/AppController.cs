@@ -10,9 +10,10 @@ namespace Melody
 {
     class AppController
     {
+        public double SoundDS;
         private ExtractedSound sound;
         private ISignal signal;
-        private CalculatedSpectrum spectrum;
+        public CalculatedSpectrum Spectrum;
 
         public Structures.TransformParameters TransformParameters;
         public Structures.SpecViewParameters SpecParameters;
@@ -28,13 +29,13 @@ namespace Melody
         {
             get
             {
-                if (spectrum == null)
+                if (Spectrum == null)
                     throw new Exception("Spectrum cant be get, because its not initialized");
 
-                var arr = new double[spectrum.Spectrum.Length][];
+                var arr = new double[Spectrum.Spectrum.Length][];
 
                 for (var i = 0; i < arr.Length; i++)
-                    arr[i] = spectrum.Spectrum[i].Select((c) => c.Magnitude).ToArray();
+                    arr[i] = Spectrum.Spectrum[i].Select((c) => c.Magnitude).ToArray();
 
                 return arr;
             }
@@ -61,6 +62,8 @@ namespace Melody
                 var soundArray = file.GetChannel(0).Select(x => (double)x).ToArray();
                 var duration = file.GetDuration();
 
+                SoundDS = file.Sampling;
+
                 sound = new ExtractedSound(soundArray, duration);
             } catch (FileScaner.Exceptions.FileReadingException ex)
             {
@@ -84,20 +87,29 @@ namespace Melody
             signal = new SpectrumAnalyzer.SimpleSignal(sound.Sound, sound.Duration);
 
             var specArr = transformer.GetSpectrum(signal);
-
-            spectrum = new CalculatedSpectrum(specArr, sound.Duration * specArr[0].Length / sound.Sound.Length );
+            var spec = new CalculatedSpectrum(specArr, sound.Duration * TransformParameters.WindowSize / sound.Sound.Length);
+            Spectrum = spec;
         }
 
         /// <exception cref="SpectrumNotCalculatedException">Spectrum calculation in process</exception>
-        public void GetNote()
+        public NoteData[] GetNotes()
         {
-            if (spectrum == null)
+            if (Spectrum == null)
                 throw new SpectrumNotCalculatedException("You must wait till transformation will be done");
-
             var detector = new NoteDetector.SimpleDetector();
-            var notePair = detector.DetectNote(spectrum.Spectrum[0], spectrum.Duration);
+            var notes = new NoteData[Spectrum.Spectrum.Length];
 
-            Note = new NoteData(notePair.Item2.ToString(), notePair.Item1);
+            for (var i = 0; i < Spectrum.Spectrum.Length; i++)
+            {
+                var notePair = detector.DetectNote(Spectrum.Spectrum[i], Spectrum.Duration);
+                notes[i] = new NoteData(notePair.Item2.ToString(), notePair.Item1);
+            }
+
+            return notes;
+
+            // var notePair = detector.DetectNote(spectrum.Spectrum[0], spectrum.Duration);
+
+            // Note = new NoteData(notePair.Item2.ToString(), notePair.Item1);
         }
     }
 }

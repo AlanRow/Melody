@@ -65,6 +65,12 @@
                     VerticalAlignment="Center"
                     Click="OpenSpecClick"
                     Content="Спектрограмма"/>
+
+                <Button
+                    Style="{StaticResource MenuButton}"
+                    VerticalAlignment="Center"
+                    Click="ShowNotesClick"
+                    Content="Ноты"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">

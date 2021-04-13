@@ -59,8 +59,7 @@ namespace Melody
                     {
                         app.ReadFile(path);
                         app.TransformSignal();
-                        app.GetNote();
-                        MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", (int)Math.Round(app.Note.Hz), app.Note.Name));
+                        /*MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", (int)Math.Round(app.Note.Hz), app.Note.Name));*/
                     }
                     catch (AudioFileReadingException ex)
                     {
@@ -75,6 +74,34 @@ namespace Melody
                 {
                     MessageBox.Show("Only WAV files is supported!", "Invalid file extension");
                 }
+            }
+        }
+
+        private void ShowNotesClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var notes = app.GetNotes();
+                var noteDur = 0d;
+                var durStep = app.Spectrum.Duration;
+                var notesLine = "";
+                for (var i = 0; i < notes.Length; i++)
+                {
+                    noteDur += durStep;
+                    if (i == notes.Length - 1 || notes[i].Name != notes[i+1].Name)
+                    {
+                        var durLine = Math.Round(noteDur * 1000);
+                        noteDur = 0;
+                        notesLine += String.Format("{0} ({1} ms)", notes[i].Name, durLine);
+                        if (i < notes.Length - 1)
+                            notesLine += ", ";
+                    }
+                }
+                MessageBox.Show(notesLine, "Notes");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 

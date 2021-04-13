@@ -97,8 +97,10 @@ namespace Melody.NoteDetector
 
             if (botDist < topDist)
                 return notes[botIdx];
-            else
+            else if (botIdx < 11)
                 return notes[botIdx + 1];
+            else
+                return notes[0];
         }
     }
 }
