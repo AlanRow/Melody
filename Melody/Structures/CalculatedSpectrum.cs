@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Melody.SpectrumAnalyzer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -9,11 +10,11 @@ namespace Melody
 {
     public class CalculatedSpectrum
     {
-        public readonly Complex[][] Spectrum;
+        public readonly Spectrum Spectrum;
         public readonly double Duration;
         private Complex[][] specArr;
 
-        public CalculatedSpectrum(Complex[][] spec, double dur)
+        public CalculatedSpectrum(Spectrum spec, double dur)
         {
             Spectrum = spec;
             Duration = dur;

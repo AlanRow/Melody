@@ -10,12 +10,15 @@ namespace Melody.SpectrumAnalyzer
 	/// </summary>
 	public class FFTTransformer : ITransformer
 	{
-		public Complex[][] Transform(double[] signal)
+		public Spectrum Transform(double[] signal, double duration)
         {
             var size = 1;
             while (size <= signal.Length)
                 size *= 2;
             size /= 2;
+
+            if (size != signal.Length)
+                duration *= ((double)size) / signal.Length;
 
             var spec = FFTByTime(signal, size, 0);
 
@@ -25,7 +28,15 @@ namespace Melody.SpectrumAnalyzer
             spec[0] /= 2;
             spec[size - 1] /= 2;
 
-            return new Complex[][] { spec };
+            var specMatrix = new Complex[][] { spec };
+            
+            var freqs = new double[spec.Length];
+            for (var i = 1; i < freqs.Length; i++)
+            {
+                freqs[i] = ((double)i) / duration; 
+            }
+
+            return new Spectrum(specMatrix, freqs);
         }
 
         // выделить в отдельный класс

@@ -35,7 +35,7 @@ namespace Melody
         }
         private void OpenSettingsClick(object sender, RoutedEventArgs e)
         {
-            var paramsWin = new TransformParamsSelectWin(app.TransformParameters);
+            var paramsWin = new TransformParamsSelectWin(app.TransformParameters, 44100);
             paramsWin.ShowDialog();
         }
         private void OpenViewSettingsClick(object sender, RoutedEventArgs e)
@@ -55,12 +55,12 @@ namespace Melody
                 if (ext == "wav")
                 {
                     // Parameters settings
-                    try
-                    {
+                    //try
+                    //{
                         app.ReadFile(path);
                         app.TransformSignal();
                         /*MessageBox.Show(String.Format("Actual frequency is {0}HZ ({1})", (int)Math.Round(app.Note.Hz), app.Note.Name));*/
-                    }
+                    /*}
                     catch (AudioFileReadingException ex)
                     {
                         MessageBox.Show(ex.Message, "File reading error");
@@ -68,7 +68,7 @@ namespace Melody
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Error");
-                    }
+                    }*/
                 }
                 else
                 {

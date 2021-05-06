@@ -125,7 +125,7 @@ namespace Melody.Views
 
 		private int GetSpecCoord(int pixelY, int pixelHeight)
         {
-			var stretch = ((double)pixelHeight) / Spectrum[0].Length * 2;
+			var stretch = ((double)pixelHeight) / Spectrum[0].Length;
 
 			switch (scaleType)
             {

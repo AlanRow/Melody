@@ -21,7 +21,7 @@ namespace Melody
 
         public AppController()
         {
-            TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 1024, 1024, 100.0);
+            TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 1024, 1024, 220.0, 880.0, 48);
             SpecParameters = new Structures.SpecViewParameters(100, 4, Views.IntensityCalcMethod.Linear, Views.IntensSumMethod.Max, Views.FreqScaleType.Linear);
         }
 
@@ -32,10 +32,10 @@ namespace Melody
                 if (Spectrum == null)
                     throw new Exception("Spectrum cant be get, because its not initialized");
 
-                var arr = new double[Spectrum.Spectrum.Length][];
+                var arr = new double[Spectrum.Spectrum.SpectrumMatrix.Length][];
 
                 for (var i = 0; i < arr.Length; i++)
-                    arr[i] = Spectrum.Spectrum[i].Select((c) => c.Magnitude).ToArray();
+                    arr[i] = Spectrum.Spectrum.SpectrumMatrix[i].Select((c) => c.Magnitude).ToArray();
 
                 return arr;
             }
@@ -97,11 +97,11 @@ namespace Melody
             if (Spectrum == null)
                 throw new SpectrumNotCalculatedException("You must wait till transformation will be done");
             var detector = new NoteDetector.SimpleDetector();
-            var notes = new NoteData[Spectrum.Spectrum.Length];
+            var notes = new NoteData[Spectrum.Spectrum.SpectrumMatrix.Length];
 
-            for (var i = 0; i < Spectrum.Spectrum.Length; i++)
+            for (var i = 0; i < Spectrum.Spectrum.SpectrumMatrix.Length; i++)
             {
-                var notePair = detector.DetectNote(Spectrum.Spectrum[i], Spectrum.Duration);
+                var notePair = detector.DetectNote(Spectrum.Spectrum.SpectrumMatrix[i], Spectrum.Duration);
                 notes[i] = new NoteData(notePair.Item2.ToString(), notePair.Item1);
             }
 

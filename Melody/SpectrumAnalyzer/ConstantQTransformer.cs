@@ -10,16 +10,18 @@ namespace Melody.SpectrumAnalyzer
     class ConstantQTransformer : ITransformer
     {
         private int FREQS_IN_OCTAVE = 96;
-        private int SAMPLING = 44100;
 
         private double startFreq = 440.0;
-        private int octavesCount = 1;
-        public Complex[][] Transform(double[] signal)
+        private int octavesCount = 2;
+
+        public Spectrum Transform(double[] signal, double duration)
         {
+            var sampling = (int)(signal.Length / duration);
             var freqsCount = FREQS_IN_OCTAVE * octavesCount;
             var freqStep = Math.Pow(2, 1.0 / FREQS_IN_OCTAVE);
-            var minSize = (int)(SAMPLING / ((freqStep - 1) * startFreq * Math.Pow(freqStep, freqsCount - 1)));
+            var minSize = (int)(sampling / ((freqStep - 1) * startFreq * Math.Pow(freqStep, freqsCount - 1)));
             var specLength = signal.Length / minSize;
+
             var spectrum = new Complex[specLength][];
 
             for (var i = 0; i < spectrum.Length; i++)
@@ -27,11 +29,13 @@ namespace Melody.SpectrumAnalyzer
                 spectrum[i] = new Complex[freqsCount];
             }
 
+            var freqs = new double[freqsCount];
             var f = startFreq;
 
             for (var freqIdx = 0; freqIdx < freqsCount; freqIdx++)
             {
-                var size = (int)(SAMPLING / (f * freqStep - f));
+                var size = (int)(sampling / (f * freqStep - f));
+                freqs[freqIdx] = f;
                 for (var i = 0; i < specLength; i++)
                 {
                     var center = i * minSize + minSize / 2;
@@ -51,33 +55,17 @@ namespace Melody.SpectrumAnalyzer
                     }
 
                     var val = Complex.Zero;
-                    for (var idx = start; idx < end; idx++)
-                        val += Complex.FromPolarCoordinates(1, -2 * Math.PI * idx * freqIdx / size);
+                    if (freqIdx > 0)
+                    {
+                        for (var idx = start; idx < end; idx++)
+                            val += Complex.FromPolarCoordinates(signal[idx], -2 * Math.PI * idx * (freqIdx + 1) / size);
+                    }
                     spectrum[i][freqIdx] = val;
                 }
                 f *= freqStep;
             }
 
-            return spectrum;
-
-
-            /*for (var c = 0; c + minSize < )
-                var f = startFreq;*/
-
-            /*for (var i = 0; i < spectrum[0].Length; i++)
-            {
-                var size = (int)(SAMPLING / (f * freqStep - f));
-                var specVal = Complex.Zero;
-
-                for (var j = 0; j < size; j++)
-                {
-                    specVal += Complex.FromPolarCoordinates(1, -2 * Math.PI * j * i / size);
-                }
-                spectrum[0][i] = specVal;
-                f *= freqStep;
-            }
-
-            return spectrum;*/
+            return new Spectrum(spectrum, freqs);
         }
     }
 }

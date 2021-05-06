@@ -16,6 +16,9 @@ namespace Melody.Views
 {
     class FilterTypeItem : ParamItem
     {
+        private static double MIN_WIN = 0.005;
+        private static double MIN_STEP = 0.005;
+
         public readonly Structures.FilterType Type;
         public FilterTypeItem(string label, Structures.FilterType type) : base(label)
         {
@@ -44,15 +47,15 @@ namespace Melody.Views
     /// </summary>
     public partial class TransformParamsSelectWin : Window
     {
-        private static int MIN_SIZE_DEG = 6;
-        private static int MAX_SIZE_DEG = 15;
-
         private Structures.TransformParameters trParams;
+        private int sampling;
 
         private ComboBox filterTypeBox;
-        private ComboBox winSizeBox;
-        private ComboBox stepSizeBox;
-        private TextBox lowFreqInput;
+        private TextBox winSizeInput;
+        private TextBox winStepInput;
+        private TextBox startFreqInput;
+        private TextBox endFreqInput;
+        private TextBox boundsInput;
         private FilterTypeItem[] GetFilterTypeItems()
         {
             return new FilterTypeItem[]
@@ -63,25 +66,13 @@ namespace Melody.Views
                 new FilterTypeItem("Окно Хэмминга", Structures.FilterType.Hamming),
             };
         }
-        private SizeItem[] GetSizeItems()
-        {
-            var sizes = new SizeItem[MAX_SIZE_DEG - MIN_SIZE_DEG + 1];
-            var startSize = (int)Math.Pow(2, MIN_SIZE_DEG);
 
-            for (var i = 0; i < MAX_SIZE_DEG - MIN_SIZE_DEG + 1; i++)
-            {
-                sizes[i] = new SizeItem(startSize.ToString(), startSize);
-                startSize *= 2;
-            }
-
-            return sizes;
-        }
-
-        public TransformParamsSelectWin(Structures.TransformParameters initParams)
+        public TransformParamsSelectWin(Structures.TransformParameters initParams, int sampleRate)
         {
             InitializeComponent();
 
             trParams = initParams;
+            sampling = sampleRate;
             
             var filterTypeItems = GetFilterTypeItems();
 
@@ -92,51 +83,73 @@ namespace Melody.Views
                 if (filterTypeItems[i].Type == trParams.Type)
                     filterTypeBox.SelectedIndex = i;
 
-            var sizeItems = GetSizeItems();
+            winSizeInput = (TextBox)FindName("WinSizeInput");
+            winSizeInput.Text = GetDoubleLine(GetDurationInMs(trParams.WindowSize));
 
-            winSizeBox = (ComboBox)FindName("WinSizeSelect");
-            winSizeBox.ItemsSource = sizeItems;
+            winStepInput = (TextBox)FindName("WinStepInput");
+            winStepInput.Text = GetDoubleLine(GetDurationInMs(trParams.StepSize));
 
-            for (var i = 0; i < sizeItems.Length; i++)
-                if (sizeItems[i].Size == trParams.WindowSize)
-                    winSizeBox.SelectedIndex = i;
+            startFreqInput = (TextBox)FindName("StartFreqInput");
+            startFreqInput.Text = trParams.StartFreq.ToString();
 
-            stepSizeBox = (ComboBox)FindName("StepSizeSelect");
-            stepSizeBox.ItemsSource = sizeItems;
+            endFreqInput = (TextBox)FindName("EndFreqInput");
+            endFreqInput.Text = trParams.EndFreq.ToString();
 
-            for (var i = 0; i < sizeItems.Length; i++)
-                if (sizeItems[i].Size == trParams.StepSize)
-                    stepSizeBox.SelectedIndex = i;
-
-            lowFreqInput = (TextBox)FindName("LowFreqInput");
-            lowFreqInput.Text = trParams.LPFLimit.ToString();
+            boundsInput = (TextBox)FindName("BoundsInput");
+            boundsInput.Text = trParams.BoundsPerOctave.ToString();
         }
 
         public void AcceptParams(object sender, RoutedEventArgs e)
         {
             trParams.Type = ((FilterTypeItem)filterTypeBox.SelectedItem).Type;
-            trParams.WindowSize = ((SizeItem)winSizeBox.SelectedItem).Size;
-            trParams.StepSize = ((SizeItem)stepSizeBox.SelectedItem).Size;
 
+
+            // TODO: Добавить валидацию полей
             try
             {
-                var lpfLimit = Double.Parse(lowFreqInput.Text);
+                var winSizeMs = Double.Parse(winSizeInput.Text);
+                var winSize = GetSamples(winSizeMs);
+                trParams.WindowSize = winSize;
 
-                if (lpfLimit <= 0)
-                    throw new FormatException();
+                var winStepMs = Double.Parse(winStepInput.Text);
+                var winStep = GetSamples(winStepMs);
+                trParams.StepSize = winStep;
 
-                trParams.LPFLimit = lpfLimit;
-            } 
+                var startFreq = Double.Parse(startFreqInput.Text);
+                trParams.StartFreq = startFreq;
+
+                var endFreq = Double.Parse(endFreqInput.Text);
+                trParams.EndFreq = endFreq;
+
+                var bounds = Int32.Parse(boundsInput.Text);
+                trParams.BoundsPerOctave = bounds;
+
+                Close();
+            }
             catch (FormatException ex)
             {
-                MessageBox.Show("Нижняя частота должна быть действительным положительным числом");
+                MessageBox.Show(ex.Message);
             }
-            Close();
         }
 
         public void Cancel(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private int GetSamples(double durationInMs)
+        {
+            return (int)Math.Round(durationInMs * sampling / 1000);
+        }
+
+        private double GetDurationInMs(int samplesLen)
+        {
+            return ((double)samplesLen) * 1000d / sampling;
+        }
+
+        private string GetDoubleLine(double d)
+        {
+            return Math.Round(d, 2).ToString();
         }
     }
 }

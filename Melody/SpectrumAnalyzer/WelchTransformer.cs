@@ -50,11 +50,14 @@ namespace Melody.SpectrumAnalyzer
             FilterFactor = filter;
         }
 
-        public Complex[][] Transform(double[] signal)
+        public Spectrum Transform(double[] signal, double duration)
         {
             var len = (signal.Length - Size) / Step + 1;
             var frame = new double[Size];
+            var frameDuration = duration * Size / signal.Length;
+
             var spectrum = new Complex[len][];
+            var freqs = new double[Size];
 
             var factorArr = Enumerable.Range(0, Size).Select((n) => FilterFactor(Size, n)).ToArray();
 
@@ -66,40 +69,14 @@ namespace Melody.SpectrumAnalyzer
                 for (var j = 0; j < Size; j++)
                     frame[j] *= factorArr[j];
 
-                var specLine = transformer.Transform(frame)[0];
-                spectrum[i] = specLine;
+                var specLine = transformer.Transform(frame, frameDuration);
+                spectrum[i] = specLine.SpectrumMatrix[0];
+
+                if (i == 0)
+                    freqs = specLine.Freqs;
             }
 
-            return spectrum;
-            /*var spectrum = new Complex[Size];
-            var frame = new double[Size];
-            var n = 0;
-
-            for (var start = 0; start + Size < signal.Length; start += Step)
-            {
-                Array.Copy(signal, start, frame, 0, Size);
-
-                // Filtering
-                for (var i = 0; i < spectrum.Length; i++)
-                {
-                    if (i == 2048)
-                    {
-                        var a = "";
-                    }
-                    var f = FilterFactor(Size, i);
-                    frame[i] *= f;
-                }
-
-                var spec = transformer.Transform(frame);
-                for (var i = 0; i < spec.Length; i++)
-                    spectrum[i] += spec[i];
-                n++;
-            }
-
-            for (var i = 0; i < spectrum.Length; i++)
-                spectrum[i] /= n;
-
-            return spectrum;*/
+            return new Spectrum(spectrum, freqs);
         }
 
         private bool IsPowerOfTwo(int number)
