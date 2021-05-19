@@ -73,6 +73,7 @@
     <Compile Include="SpectrumAnalyzer\ITransformer.cs" />
     <Compile Include="SpectrumAnalyzer\DiscreteLPF.cs" />
     <Compile Include="SpectrumAnalyzer\LogFTTransformer.cs" />
+    <Compile Include="SpectrumAnalyzer\SimpleLogFT.cs" />
     <Compile Include="SpectrumAnalyzer\SimpleSignal.cs" />
     <Compile Include="SpectrumAnalyzer\Spectrum.cs" />
     <Compile Include="SpectrumAnalyzer\WelchTransformer.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Structures\SpecViewParameters.cs" />
     <Compile Include="Structures\TransformParameters.cs" />
     <Compile Include="Utils\MathUtils.cs" />
+    <Compile Include="Views\SpecInfoConverter.cs" />
     <Compile Include="Views\ParamItem.cs" />
     <Compile Include="Views\SimpleRenderer.cs" />
     <Compile Include="Views\SpecParamsSelectWin.xaml.cs">
