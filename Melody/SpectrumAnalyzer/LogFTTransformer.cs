@@ -67,16 +67,19 @@ namespace Melody.SpectrumAnalyzer
 
             var freqsCount = BoundsCount;
             var freqs = new double[freqsCount];
+            var actualFreqs = new double[freqsCount];
             var freqStep = Math.Pow(2, 1.0 / BoundsPerOctave);
-            var f = StartFreq * frameDuration;
+            
+            var f = StartFreq;
 
             for (var i = 0; i < freqs.Length; i++)
             {
-                freqs[i] = f;
+                freqs[i] = f * frameDuration;
+                actualFreqs[i] = f;
                 f *= freqStep;
             }
 
-            for (var time = 0; time + WinSize < signal.Length; time += WinStep)
+            for (var time = 0; time + WinSize - 1 < signal.Length; time += WinStep)
             {
                 var specAtTime = new Complex[freqsCount];
 
@@ -101,7 +104,7 @@ namespace Melody.SpectrumAnalyzer
                 spectrum[time / WinStep] = specAtTime;
             }
 
-            return new Spectrum(spectrum, freqs);
+            return new Spectrum(spectrum, actualFreqs);
         }
     }
 }
