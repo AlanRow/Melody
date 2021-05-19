@@ -37,9 +37,9 @@ namespace Melody.Views
             freqPopup = (Popup)FindName("FreqPopup");
         }
 
-        public void DrawSpectrogram(double[][] spectrum, double[] freqs, double winDur, double dur, Structures.SpecViewParameters options)
+        public void DrawSpectrogram(double[][] spectrum, double[] freqs, double dur, Structures.SpecViewParameters options)
         {
-            renderer = new SimpleRenderer(spectrum, winDur, options);
+            renderer = new SimpleRenderer(spectrum, options);
             renderer.DrawSpectrogram(img, WIDTH, HEIGHT);
 
             converter = new SpecInfoConverter(freqs, dur, WIDTH, HEIGHT);

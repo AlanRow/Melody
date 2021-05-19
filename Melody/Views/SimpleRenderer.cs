@@ -41,11 +41,6 @@ namespace Melody.Views
 		private int lastHeight;
 		private Image lastImg;
 
-		private double winDuration;
-
-		private double startFreq;
-		private double octavesCount;
-
 		private FreqScaleType scaleType = FreqScaleType.Linear;
 		private IntensityCalcMethod calcMethod = IntensityCalcMethod.Linear;
 		private double intensityPower = 2;
@@ -53,14 +48,10 @@ namespace Melody.Views
 
 		public double[][] Spectrum { get; set; }
 
-		public SimpleRenderer(double[][] spec, double winDurationInSec, SpecViewParameters options)
+		public SimpleRenderer(double[][] spec, SpecViewParameters options)
 		{
 			IntensityColor = INTENSITY_COLOR;
 			Spectrum = spec;
-			winDuration = winDurationInSec;
-			//maxFreq = maxFreqValue;
-			startFreq = options.StartFreq;
-			octavesCount = options.OctavesCount;
 
 			scaleType = options.ScaleType;
 			calcMethod = options.CalcMethod;

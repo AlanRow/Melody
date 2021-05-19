@@ -121,7 +121,7 @@ namespace Melody
                 MessageBox.Show("Чтобы построить спектрограмму, загрузите звуковой файл.");
             }*/
             var intensities = app.SpectrumIntensities;
-            spectrogram.DrawSpectrogram(intensities, app.Spectrum.Spectrum.Freqs, app.GetWinDuration(), app.Signal.GetDurationInSeconds(), app.SpecParameters);
+            spectrogram.DrawSpectrogram(intensities, app.Spectrum.Spectrum.Freqs, app.Signal.GetDurationInSeconds(), app.SpecParameters);
             spectrogram.Show();
         }
 
