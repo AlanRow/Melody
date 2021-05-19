@@ -12,7 +12,6 @@ namespace Melody
     {
         public readonly Spectrum Spectrum;
         public readonly double Duration;
-        private Complex[][] specArr;
 
         public CalculatedSpectrum(Spectrum spec, double dur)
         {
