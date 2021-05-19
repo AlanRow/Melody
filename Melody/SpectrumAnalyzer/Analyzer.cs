@@ -50,6 +50,7 @@ namespace Melody.SpectrumAnalyzer
 			}
 
 			transformer = new LogFTTransformer(options.StartFreq, options.EndFreq, options.BoundsPerOctave, options.WindowSize, options.StepSize, filter);
+			//transformer = new SimpleLogFT(options.StartFreq, options.EndFreq, options.BoundsPerOctave);
 		}
 
 		public Spectrum GetSpectrum(ISignal signal)
