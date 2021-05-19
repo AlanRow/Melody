@@ -24,7 +24,7 @@ namespace Melody.Views
         public double GetFreqByCoord(int y)
         {
             var f = ((double)frequencies.Length) / pixH;
-            var fIdx = (int)(y * f) - 1;
+            var fIdx = frequencies.Length - (int)(y * f);
 
             // Restrictions
             if (fIdx < 0) fIdx = 0;

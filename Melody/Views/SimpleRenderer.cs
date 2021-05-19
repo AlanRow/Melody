@@ -174,9 +174,10 @@ namespace Melody.Views
 		private void FillColumn(byte[] pixels, double[] intensities, int column, int rowWidth)
 		{
 			var idx = column * COLOR_SIZE;
+			var len = intensities.Length;
 			for (var i = 0; i < intensities.Length; i++)
 			{
-				var ints = intensities[i];
+				var ints = intensities[len - i - 1];
 
 				byte b = 0;
 				byte g = 0;
