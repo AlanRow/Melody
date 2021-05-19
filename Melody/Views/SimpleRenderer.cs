@@ -132,12 +132,7 @@ namespace Melody.Views
 				case FreqScaleType.Linear:
 					return (int) (pixelY / stretch);
 				case FreqScaleType.Log:
-					var specStep = octavesCount / pixelHeight;
-					var idx = (int)(startFreq * Math.Pow(2, specStep * pixelY));
-					if (idx >= Spectrum[0].Length / 2)
-						return Spectrum[0].Length + 1;
-					
-					return idx;
+					throw new NotImplementedException("Логарифмическая шкала недоступна в данной версии");
 			}
 
 			return 0;
@@ -153,7 +148,7 @@ namespace Melody.Views
 					return Math.Log(abs + 1) / Math.Log(max + 1);
 				case IntensityCalcMethod.Pow:
 					return Math.Pow(abs / max, intensityPower);
-            }
+			}
 
 			return 0;
         }
@@ -187,17 +182,38 @@ namespace Melody.Views
 
 		private void FillColumn(byte[] pixels, double[] intensities, int column, int rowWidth)
 		{
-			var B = IntensityColor.B;
-			var G = IntensityColor.G;
-			var R = IntensityColor.R;
-
 			var idx = column * COLOR_SIZE;
 			for (var i = 0; i < intensities.Length; i++)
 			{
 				var ints = intensities[i];
-				pixels[idx] = (byte)(int)(B * ints);
-				pixels[idx + 1] = (byte)(int)(G * ints);
-				pixels[idx + 2] = (byte)(int)(R * ints);
+
+				byte b = 0;
+				byte g = 0;
+				byte r = 0;
+
+
+				if (ints > 0.75)
+                {
+					r = 255;
+					g = (byte)(255 - (ints - 0.75) * 1020);
+                }
+				else if (ints > 0.5)
+                {
+					r = (byte)((ints - 0.5) * 1020);
+					g = 255;
+                } else if (ints > 0.25)
+                {
+					g = 255;
+					b = (byte)(255 - (ints - 0.25) * 1020);
+				} else
+                {
+					g = (byte)(ints * 1020);
+					b = 255;
+                }
+
+				pixels[idx] = b;
+				pixels[idx + 1] = g;
+				pixels[idx + 2] = r;
 				idx += rowWidth * COLOR_SIZE;
 			}
 		}
