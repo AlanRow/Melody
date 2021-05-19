@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -19,17 +20,44 @@ namespace Melody.Views
     /// </summary>
     public partial class SpectrogramWindow : Window
     {
+        private static int WIDTH = 1200;
+        private static int HEIGHT = 800;
+
+        private Canvas cont;
+        private Image img;
+        private Popup freqPopup;
+        private SimpleRenderer renderer;
+        private SpecInfoConverter converter;
+
         public SpectrogramWindow()
         {
             InitializeComponent();
+            img = (Image)FindName("SpectrogramImage");
+            cont = (Canvas)FindName("SpectrogramContainer");
+            freqPopup = (Popup)FindName("FreqPopup");
         }
 
-        public void DrawSpectrogram(double[][] spectrum, double winDur, Structures.SpecViewParameters options)
+        public void DrawSpectrogram(double[][] spectrum, double[] freqs, double winDur, double dur, Structures.SpecViewParameters options)
         {
-            var renderer = new SimpleRenderer(spectrum, winDur, options);
-            var img = (Image)FindName("SpectrogramImage");
-            var cont = (Canvas)FindName("SpectrogramContainer");
-            renderer.DrawSpectrogram(img, 1400, 450);
+            renderer = new SimpleRenderer(spectrum, winDur, options);
+            renderer.DrawSpectrogram(img, WIDTH, HEIGHT);
+
+            converter = new SpecInfoConverter(freqs, dur, WIDTH, HEIGHT);
+        }
+
+        public void HandleMouseMove(object sender, MouseEventArgs e)
+        {
+            var p = e.GetPosition(img);
+            freqPopup.HorizontalOffset = p.X;
+            freqPopup.VerticalOffset = p.Y;
+
+            var time = converter.GetTimeByCoord((int)p.X);
+            var freq = converter.GetFreqByCoord((int)p.Y);
+
+            var textBlock = (TextBlock)FindName("FreqTextBox");
+            textBlock.Text = String.Format("{0} Гц ({1}мс)", Math.Round(freq), Math.Round(time * 1000));
+
+            freqPopup.IsOpen = true;
         }
     }
 }

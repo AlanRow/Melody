@@ -12,7 +12,7 @@ namespace Melody
     {
         public double SoundDS;
         private ExtractedSound sound;
-        private ISignal signal;
+        public ISignal Signal;
         public CalculatedSpectrum Spectrum;
 
         public Structures.TransformParameters TransformParameters;
@@ -21,7 +21,7 @@ namespace Melody
 
         public AppController()
         {
-            TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 1024, 1024, 220.0, 880.0, 48);
+            TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 441, 441, 130.0, 4600.0, 48);
             SpecParameters = new Structures.SpecViewParameters(100, 4, Views.IntensityCalcMethod.Linear, Views.IntensSumMethod.Max, Views.FreqScaleType.Linear);
         }
 
@@ -50,7 +50,7 @@ namespace Melody
 
             // win dur = win length / SF = win length / signal length * signal duration
             // SF = signal length / signal duration
-            return signal.GetDurationInSeconds() * TransformParameters.WindowSize / signal.GetActualLength();
+            return Signal.GetDurationInSeconds() * TransformParameters.WindowSize / Signal.GetActualLength();
         }
 
         /// <exception cref="AudioFileReadingException">File reading error</exception>
@@ -84,9 +84,9 @@ namespace Melody
                 throw new FileNotLoadedException("You must load file before extract signal from it");
 
             var transformer = new SpectrumAnalyzer.Analyzer(TransformParameters);
-            signal = new SpectrumAnalyzer.SimpleSignal(sound.Sound, sound.Duration);
+            Signal = new SpectrumAnalyzer.SimpleSignal(sound.Sound, sound.Duration);
 
-            var specArr = transformer.GetSpectrum(signal);
+            var specArr = transformer.GetSpectrum(Signal);
             var spec = new CalculatedSpectrum(specArr, sound.Duration * TransformParameters.WindowSize / sound.Sound.Length);
             Spectrum = spec;
         }

@@ -5,21 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Melody.Views"
         mc:Ignorable="d"
-        Title="SpectrogramWindow" Height="640" Width="800">
+        Title="SpectrogramWindow" Height="800" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="640" />
+            <RowDefinition Height="800" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="800" />
+            <ColumnDefinition Width="1200" />
         </Grid.ColumnDefinitions>
         <Canvas
-            Width="800"
+            Width="1200"
 			x:Name="SpectrogramContainer"
 			HorizontalAlignment="Stretch">
-            <Image 
+            <Image
+                MouseMove="HandleMouseMove"
 			    x:Name="SpectrogramImage"/>
         </Canvas>
+        <Popup x:Name="FreqPopup">
+            <TextBlock x:Name="FreqTextBox" Foreground="White">Нет данных</TextBlock>
+        </Popup>
 
     </Grid>
 </Window>
