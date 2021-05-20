@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Melody.Views"
         mc:Ignorable="d"
         Background="Bisque"
-        Title="Выберите параметры преобразования" Height="850" Width="450">
+        Title="Выберите параметры преобразования" Height="650" Width="800">
         <Window.Resources>
         <Style TargetType="Button"
                    x:Key="FormButton">
@@ -23,13 +23,17 @@
             <RowDefinition Height="100" />
             <RowDefinition Height="100" />
             <RowDefinition Height="100" />
-            <RowDefinition Height="100" />
-            <RowDefinition Height="100" />
             <RowDefinition Height="150" />
         </Grid.RowDefinitions>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="400" />
+        </Grid.ColumnDefinitions>
+
         <StackPanel
             Grid.Row="0"
+            Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
             <TextBlock TextAlignment="Left">Тип фильтра:</TextBlock>
@@ -41,6 +45,7 @@
         
         <StackPanel
             Grid.Row="1"
+            Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
             <TextBlock TextAlignment="Left">Размер окна (мс):</TextBlock>
@@ -51,7 +56,8 @@
         </StackPanel>
         
         <StackPanel
-            Grid.Row="2"
+            Grid.Row="1"
+            Grid.Column="1"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
             <TextBlock TextAlignment="Left">Размер шага (мс):</TextBlock>
@@ -62,7 +68,8 @@
         </StackPanel>
         
         <StackPanel
-            Grid.Row="3"
+            Grid.Row="2"
+            Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
             <TextBlock TextAlignment="Left">Нижняя частота:</TextBlock>
@@ -73,7 +80,8 @@
         </StackPanel>
         
         <StackPanel
-            Grid.Row="4"
+            Grid.Row="2"
+            Grid.Column="1"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
             <TextBlock TextAlignment="Left">Верхняя частота:</TextBlock>
@@ -84,7 +92,7 @@
         </StackPanel>
         
         <StackPanel
-            Grid.Row="5"
+            Grid.Row="3"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
             <TextBlock TextAlignment="Left">Количество измерений (на октаву):</TextBlock>
@@ -95,7 +103,7 @@
         </StackPanel>
         
         <StackPanel
-            Grid.Row="6"
+            Grid.Row="4"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
             <TextBlock TextAlignment="Left">Процент фильтрации:</TextBlock>
@@ -107,7 +115,8 @@
 
         <StackPanel
             Orientation="Horizontal"
-            Grid.Row="7"
+            Grid.Row="5"
+            Grid.Column="0"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
             <Button
@@ -115,6 +124,13 @@
                 Margin="0 0 10 0"
                 Content="Изменить"
                 Click="AcceptParams"/>
+        </StackPanel>
+        <StackPanel
+            Orientation="Horizontal"
+            Grid.Row="5"
+            Grid.Column="1"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center">
             <Button
                 Style="{StaticResource FormButton}"
                 Margin="10 0 0 0"
