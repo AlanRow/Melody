@@ -43,7 +43,7 @@ namespace Melody.SpectrumAnalyzer
             BoundsPerOctave = bounds;
         }
 
-        public Spectrum Transform(double[] signal, double duration)
+        public RawSpectrum Transform(double[] signal, double duration)
         {
             var freqsCount = BoundsCount;
             var freqs = new double[freqsCount];
@@ -71,7 +71,7 @@ namespace Melody.SpectrumAnalyzer
                 spec[freqIdx] = val;
             }
 
-            return new Spectrum(new Complex[1][] { spec }, freqs);
+            return new RawSpectrum(new Complex[1][] { spec }, freqs);
         }
     }
 }

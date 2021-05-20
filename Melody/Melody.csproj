@@ -73,9 +73,11 @@
     <Compile Include="SpectrumAnalyzer\ITransformer.cs" />
     <Compile Include="SpectrumAnalyzer\DiscreteLPF.cs" />
     <Compile Include="SpectrumAnalyzer\LogFTTransformer.cs" />
+    <Compile Include="SpectrumAnalyzer\RawSpectrum.cs" />
     <Compile Include="SpectrumAnalyzer\SimpleLogFT.cs" />
     <Compile Include="SpectrumAnalyzer\SimpleSignal.cs" />
-    <Compile Include="SpectrumAnalyzer\Spectrum.cs" />
+    <Compile Include="SpectrumAnalyzer\Spectrogram.cs" />
+    <Compile Include="SpectrumAnalyzer\SpectrumNormalizer.cs" />
     <Compile Include="SpectrumAnalyzer\WelchTransformer.cs" />
     <Compile Include="Structures\CalculatedSpectrum.cs" />
     <Compile Include="Structures\ExtractedSound.cs" />

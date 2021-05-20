@@ -10,10 +10,10 @@ namespace Melody
 {
     public class CalculatedSpectrum
     {
-        public readonly Spectrum Spectrum;
+        public readonly Spectrogram Spectrum;
         public readonly double Duration;
 
-        public CalculatedSpectrum(Spectrum spec, double dur)
+        public CalculatedSpectrum(Spectrogram spec, double dur)
         {
             Spectrum = spec;
             Duration = dur;

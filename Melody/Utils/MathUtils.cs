@@ -13,6 +13,11 @@ namespace Melody.Utils
             return Math.Log(num)/Math.Log(2);
         }
 
+        public static double LogBy(double num, double bas)
+        {
+            return Math.Log(num) / Math.Log(bas);
+        }
+
         public static int GetWindowsCount(int fullLength, int windowSize, int stepSize)
         {
             return (fullLength - windowSize) / stepSize + 1;

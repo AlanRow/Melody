@@ -24,7 +24,10 @@ namespace Melody.Structures
         public double EndFreq;
         public int BoundsPerOctave;
 
-        public TransformParameters(FilterType type, int window, int step, double start, double end, int bounds)
+        // 0-100
+        public double FilterPercentage;
+
+        public TransformParameters(FilterType type, int window, int step, double start, double end, int bounds, double perc)
         {
             Type = type;
             WindowSize = window;
@@ -32,6 +35,7 @@ namespace Melody.Structures
             StartFreq = start;
             EndFreq = end;
             BoundsPerOctave = bounds;
+            FilterPercentage = perc;
         }
     }
 }

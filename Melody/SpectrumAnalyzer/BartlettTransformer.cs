@@ -22,7 +22,7 @@ namespace Melody.SpectrumAnalyzer
                 throw new ArgumentException(String.Format("Frame size for FFT must be power of 2, but it is {0}", size));
         }
 
-        public Spectrum Transform(double[] signal, double duration)
+        public RawSpectrum Transform(double[] signal, double duration)
         {
             var len = signal.Length / Size;
             var frame = new double[Size];
@@ -41,7 +41,7 @@ namespace Melody.SpectrumAnalyzer
                 
             }
 
-            return new Spectrum(spectrum, freqs);
+            return new RawSpectrum(spectrum, freqs);
         }
 
         private bool IsPowerOfTwo(int number)

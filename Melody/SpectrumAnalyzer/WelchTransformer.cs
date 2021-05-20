@@ -50,7 +50,7 @@ namespace Melody.SpectrumAnalyzer
             FilterFactor = filter;
         }
 
-        public Spectrum Transform(double[] signal, double duration)
+        public RawSpectrum Transform(double[] signal, double duration)
         {
             var len = (signal.Length - Size) / Step + 1;
             var frame = new double[Size];
@@ -76,7 +76,7 @@ namespace Melody.SpectrumAnalyzer
                     freqs = specLine.Freqs;
             }
 
-            return new Spectrum(spectrum, freqs);
+            return new RawSpectrum(spectrum, freqs);
         }
 
         private bool IsPowerOfTwo(int number)

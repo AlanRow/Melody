@@ -14,7 +14,7 @@ namespace Melody.SpectrumAnalyzer
         private double startFreq = 440.0;
         private int octavesCount = 2;
 
-        public Spectrum Transform(double[] signal, double duration)
+        public RawSpectrum Transform(double[] signal, double duration)
         {
             var sampling = (int)(signal.Length / duration);
             var freqsCount = FREQS_IN_OCTAVE * octavesCount;
@@ -65,7 +65,7 @@ namespace Melody.SpectrumAnalyzer
                 f *= freqStep;
             }
 
-            return new Spectrum(spectrum, freqs);
+            return new RawSpectrum(spectrum, freqs);
         }
     }
 }

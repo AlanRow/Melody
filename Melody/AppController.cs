@@ -21,7 +21,7 @@ namespace Melody
 
         public AppController()
         {
-            TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 441, 441, 130.0, 4600.0, 48);
+            TransformParameters = new Structures.TransformParameters(Structures.FilterType.Rectangle, 441, 441, 130.0, 4600.0, 48, 1);
             SpecParameters = new Structures.SpecViewParameters(100, 4, Views.IntensityCalcMethod.Linear, Views.IntensSumMethod.Max, Views.FreqScaleType.Linear);
         }
 
@@ -32,12 +32,13 @@ namespace Melody
                 if (Spectrum == null)
                     throw new Exception("Spectrum cant be get, because its not initialized");
 
-                var arr = new double[Spectrum.Spectrum.SpectrumMatrix.Length][];
+                /*var arr = new double[Spectrum.Spectrum.SpectrumMatrix.Length][];
 
                 for (var i = 0; i < arr.Length; i++)
                     arr[i] = Spectrum.Spectrum.SpectrumMatrix[i].Select((c) => c.Magnitude).ToArray();
 
-                return arr;
+                return arr;*/
+                return Spectrum.Spectrum.SpectrumMatrix;
             }
         }
 

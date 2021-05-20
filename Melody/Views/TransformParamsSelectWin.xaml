@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Melody.Views"
         mc:Ignorable="d"
         Background="Bisque"
-        Title="Выберите параметры преобразования" Height="750" Width="450">
+        Title="Выберите параметры преобразования" Height="850" Width="450">
         <Window.Resources>
         <Style TargetType="Button"
                    x:Key="FormButton">
@@ -18,6 +18,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
             <RowDefinition Height="100" />
             <RowDefinition Height="100" />
             <RowDefinition Height="100" />
@@ -92,10 +93,21 @@
                 x:Name="BoundsInput">
             </TextBox>
         </StackPanel>
+        
+        <StackPanel
+            Grid.Row="6"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center">
+            <TextBlock TextAlignment="Left">Процент фильтрации:</TextBlock>
+            <TextBox
+                Width="300"
+                x:Name="FilterPercentageInput">
+            </TextBox>
+        </StackPanel>
 
         <StackPanel
             Orientation="Horizontal"
-            Grid.Row="6"
+            Grid.Row="7"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
             <Button

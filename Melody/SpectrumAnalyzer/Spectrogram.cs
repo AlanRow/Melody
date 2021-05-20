@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace Melody.SpectrumAnalyzer
 {
-    public class Spectrum
+    public class Spectrogram
     {
-        public readonly Complex[][] SpectrumMatrix;
+        public readonly double[][] SpectrumMatrix;
         public readonly double[] Freqs;
+        public readonly double Duration;
 
-        public Spectrum(Complex[][] spec, double[] frequencies)
+        public Spectrogram(double[][] spec, double[] frequencies, double dur)
         {
             // Validation
             if (spec.Length == 0)
@@ -23,6 +24,7 @@ namespace Melody.SpectrumAnalyzer
 
             SpectrumMatrix = spec;
             Freqs = frequencies;
+            Duration = dur;
         }
     }
 }

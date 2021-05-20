@@ -9,6 +9,6 @@ namespace Melody.SpectrumAnalyzer
 {
     interface ITransformer
     {
-        Spectrum Transform(double[] signal, double duration);
+        RawSpectrum Transform(double[] signal, double duration);
     }
 }

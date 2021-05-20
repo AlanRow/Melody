@@ -10,7 +10,7 @@ namespace Melody.SpectrumAnalyzer
 	/// </summary>
 	public class FFTTransformer : ITransformer
 	{
-		public Spectrum Transform(double[] signal, double duration)
+		public RawSpectrum Transform(double[] signal, double duration)
         {
             var size = 1;
             while (size <= signal.Length)
@@ -36,7 +36,7 @@ namespace Melody.SpectrumAnalyzer
                 freqs[i] = ((double)i) / duration; 
             }
 
-            return new Spectrum(specMatrix, freqs);
+            return new RawSpectrum(specMatrix, freqs);
         }
 
         // выделить в отдельный класс

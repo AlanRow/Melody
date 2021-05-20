@@ -16,7 +16,7 @@ namespace Melody.NoteDetector
          * Returns most-powerfull frequency in signal
          * Spectrum must be calculated by FFT
          **/
-        public Tuple<double, Note> DetectNote(Complex[] spectrum, double duration)
+        public Tuple<double, Note> DetectNote(double[] spectrum, double duration)
         {
             var hz = CalcHz(spectrum, duration);
             var conv = new NoteConverter(new NoteMeasurer(DetectionMetric.Scalar));
@@ -25,14 +25,14 @@ namespace Melody.NoteDetector
             return new Tuple<double, Note>(hz, note);
         }
 
-        private double CalcHz(Complex[] spectrum, double duration)
+        private double CalcHz(double[] spectrum, double duration)
         {
             var max = 0d;
             var maxFreq = 0d;
             var maxIdx = -1;
             for (var i = 1; i < spectrum.Length / 2; i++)
             {
-                var magn = spectrum[i].Magnitude;
+                var magn = spectrum[i];
                 if (magn >= max)
                 {
                     max = magn;

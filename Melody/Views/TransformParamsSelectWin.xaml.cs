@@ -56,6 +56,7 @@ namespace Melody.Views
         private TextBox startFreqInput;
         private TextBox endFreqInput;
         private TextBox boundsInput;
+        private TextBox filterPercentageInput;
         private FilterTypeItem[] GetFilterTypeItems()
         {
             return new FilterTypeItem[]
@@ -97,6 +98,9 @@ namespace Melody.Views
 
             boundsInput = (TextBox)FindName("BoundsInput");
             boundsInput.Text = trParams.BoundsPerOctave.ToString();
+
+            filterPercentageInput = (TextBox)FindName("FilterPercentageInput");
+            filterPercentageInput.Text = trParams.FilterPercentage.ToString();
         }
 
         public void AcceptParams(object sender, RoutedEventArgs e)
@@ -123,6 +127,13 @@ namespace Melody.Views
 
                 var bounds = Int32.Parse(boundsInput.Text);
                 trParams.BoundsPerOctave = bounds;
+
+                var filterPerc = Int32.Parse(filterPercentageInput.Text);
+                if (filterPerc < 0 || filterPerc > 100)
+                {
+                    throw new FormatException("Процент фильтрации должен быть числом в диапазоне от 0 до 100");
+                }
+                trParams.FilterPercentage = filterPerc;
 
                 Close();
             }

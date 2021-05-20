@@ -18,6 +18,7 @@ namespace Melody.SpectrumAnalyzer
 	public class Analyzer
 	{
 		private ITransformer transformer;
+		private double freqFilterPercentage;
 		private Structures.TransformParameters options;
 		
 		public Analyzer(Structures.TransformParameters transformOptions)
@@ -51,16 +52,24 @@ namespace Melody.SpectrumAnalyzer
 
 			transformer = new LogFTTransformer(options.StartFreq, options.EndFreq, options.BoundsPerOctave, options.WindowSize, options.StepSize, filter);
 			//transformer = new SimpleLogFT(options.StartFreq, options.EndFreq, options.BoundsPerOctave);
+
+			freqFilterPercentage = options.FilterPercentage;
 		}
 
-		public Spectrum GetSpectrum(ISignal signal)
+		public Spectrogram GetSpectrum(ISignal signal)
 		{
 			var spectrum = transformer.Transform(signal.GetValues().ToArray(), signal.GetDurationInSeconds());
 
-			var winDuration = signal.GetDurationInSeconds() * options.WindowSize / signal.GetActualLength();
+			// var winDuration = signal.GetDurationInSeconds() * options.WindowSize / signal.GetActualLength();
 			// DiscreteLPF.Filter(spectrum, winDuration, options.LPFLimit);
 			// DiscreteHPF.Filter(spectrum, winDuration, 2000);
-			return spectrum;
+
+			var filterNum = (int)(spectrum.Freqs.Length * freqFilterPercentage / 100);
+
+			var normer = new SpectrumNormalizer(filterNum);
+			var nSpec = normer.GetNormalizedSpectrum(spectrum.SpectrumMatrix);
+
+			return new Spectrogram(nSpec, spectrum.Freqs, signal.GetDurationInSeconds());
 		}
 	}
 }

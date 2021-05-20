@@ -57,7 +57,7 @@ namespace Melody.SpectrumAnalyzer
         }
 
         // Get spectrum
-        public Spectrum Transform(double[] signal, double duration)
+        public RawSpectrum Transform(double[] signal, double duration)
         {
             var specLength = MathUtils.GetWindowsCount(signal.Length, WinSize, WinStep);
             var spectrum = new Complex[specLength][];
@@ -104,7 +104,7 @@ namespace Melody.SpectrumAnalyzer
                 spectrum[time / WinStep] = specAtTime;
             }
 
-            return new Spectrum(spectrum, actualFreqs);
+            return new RawSpectrum(spectrum, actualFreqs);
         }
     }
 }
